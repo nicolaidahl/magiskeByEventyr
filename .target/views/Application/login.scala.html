@@ -1,0 +1,58 @@
+@(form: Form[(String,String)])(implicit flash: Flash)
+
+@Layout.internal_main("Magiske Byeventyr! - Intern brug") {
+    @helper.form(routes.Application.authenticate) {
+            
+            <h1>Sign in</h1>
+            
+            @form.globalError.map { error =>
+                <p class="error">
+                    @error.message
+                </p>
+            }
+            
+            @flash.get("success").map { message =>
+                <p class="success">
+                    @message
+                </p>
+            }
+            
+            <p>
+                <input type="email" name="email" placeholder="Email" id="email" value="@form("email").value">
+            </p>
+            <p>
+                <input type="password" name="password" id="password" placeholder="Password">
+            </p>
+            <p>
+                <button type="submit" id="loginbutton">Login</button>
+            </p>
+            
+        }
+        
+        <p class="note">
+            Try <em>lalaj@@lalaj.com</em> with <em>secret</em> as password.
+        </p>
+} {
+	<ul class="nav nav-pills nav-stacked">
+  		<li><a href="#">Test1</a></li>
+  		<li><a href="#">Test2</a></li>
+  		<li><a href="#">Test3</a></li>
+	</ul>
+} {
+	<div class="row-fluid">
+		<div class="navbar">
+		  <div class="navbar-inner">
+		    <a class="brand" href="#">TODO: LOGO</a>
+		    <ul class="nav">
+		      	<li><a href="#">Kundeoversigt</a></li>
+		    </ul>
+		    <ul class="nav pull-right">				    	
+		      	<li><a href="#">Indstillinger</a></li>
+				<li><a href="@routes.Application.login">Login</a></li>
+		    </ul>
+		  </div>
+		</div>
+	</div>
+}
+
+

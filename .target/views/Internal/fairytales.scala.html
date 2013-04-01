@@ -1,0 +1,88 @@
+@(customerId: Int, fairyTales: Seq[FairyTale], fairyTaleForm: Form[FairyTale])
+@Layout.internal_main("Magiske Byeventyr! - Intern brug") {
+	@if(fairyTales.length > 0) {
+		
+	}
+	
+		@if(fairyTales.length > 0) {
+			<div class="row-fluid">
+				<div class="span10 offset1">
+					<a href="#myModal" role="button" class="btn-large btn-success pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret nyt eventyr</a>
+				</div>
+			</div>
+			@for((fairyTale, idx) <- fairyTales.zipWithIndex){
+				@if(idx % 4 == 0) { 
+				<div class="row-fluid">
+					<div class="span10 offset1">
+						<ul class="thumbnails">
+				}	
+							<li class="span3">
+								<a href="@routes.Internal.fairyTale(fairyTale.customerId, fairyTale.id.getOrElse(-1))">
+								<div class="thumbnail">
+									<h3 class="text-center">@fairyTale.name</h3>
+									<img src="http://www.templatis.com/images/free/free-generic-logo-0029.jpg" alt="customer logo" />
+								</div>
+								</a>
+							</li>
+				@if((idx + 1) % 4 == 0) {
+						</ul>	
+					</div>
+				</div>
+				}
+			}
+		} else {
+			<div class="row-fluid">
+				<div class="span6 offset3">
+					<div class="hero-unit">
+						<h2>Ingen eventyr!</h2>
+						<p>Tryk på knappen nedenfor for at oprette et nyt eventyr.</p>
+						<p>
+							<a href="#myModal" role="button" class="btn-large btn-success pull-right" data-toggle="modal">Nyt eventyr</a>
+						</p>
+					</div>	
+				</div>
+			</div>
+		}
+		<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		    <h3 id="myModalLabel">Opret eventyr</h3>
+		  </div>
+		  @helper.form(routes.Internal.saveFairyTale(customerId)){
+			  <div class="modal-body">
+			  	@helper.inputText(fairyTaleForm("name"), '_label -> "Eventyr navn")
+			  	@helper.inputText(fairyTaleForm("dueDate"),  '_label -> "Deadline", '_help -> "Eksempel: 2013-04-27")
+			  	<script>
+				  $(function() {
+				    $('#dueDate').datepicker({ dateFormat: "yy-mm-dd" });
+				    $('#ui-datepicker-div').wrap('<div class="jquery-ui-scope" />');
+				  });
+			  	</script>					  	
+			  	@helper.textarea(fairyTaleForm("briefing"), '_label -> "Briefing")
+			  	@defining(fairyTaleForm("customerId")) { uidField =>
+				  <input type="hidden" name="@uidField.name" id="@uidField.id" value="@customerId">
+				}
+			  </div>
+			  <div class="modal-footer">
+			    <button class="btn" data-dismiss="modal" aria-hidden="true">Luk</button>
+			    <input type="submit" class="btn btn-primary" value="Gem" />
+			  </div>					  
+		  }
+		</div>
+	</div>    
+} {
+	<div class="row-fluid">
+		<div class="navbar">
+		  <div class="navbar-inner">
+		    <a class="brand" href="#">TODO: LOGO</a>
+		    <ul class="nav">
+		    	<li><a href="@routes.Internal.index">Kundeoversigt</a></li>
+		    </ul>
+		    <ul class="nav pull-right">				    	
+		      	<li><a href="#">Indstillinger</a></li><!-- TODO: ONLY IF ADMIN USER -->
+				<li><a href="@routes.Internal.logout">Logout</a></li>
+		    </ul>
+		  </div>
+		</div>
+	</div>
+}

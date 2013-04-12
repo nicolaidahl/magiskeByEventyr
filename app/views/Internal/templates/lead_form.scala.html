@@ -1,0 +1,29 @@
+<form id="lead-form" class="lead">
+	<div class="row-fluid">
+		<div class="hero-unit">
+			<!--<label>Ledetråd navn:</label>
+			<input type="text" name="name" />  -->
+			<label>Ledetråd billede:</label>
+			<input type="file" name="leadPicure" />
+			<input type="button" id="save-lead" class="btn btn-primary pull-right" value="Save" />
+		</div>
+	</div>
+</form>
+<script type="text/javascript">
+	
+	$('#save-lead').click(function(e){
+		$.ajax({
+            type : 'POST',
+            url : '@routes.InternalAjax.saveLeadImage()',
+            data : $('#lead-form').serialize(),
+            dataType : "text",
+            success : function(data) {
+            	alert(data);
+            },
+            error : function(data) {
+                setError('Make call failed');
+            }
+        });
+        return false;
+	});
+</script>

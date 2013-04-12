@@ -4,21 +4,6 @@
 		<div class="row-fluid">
 			<div class="span10 offset1">
 				<a href="#myModal" role="button" class="btn-large btn-success pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret kunde</a>
-				<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				  <div class="modal-header">
-				    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				    <h3 id="myModalLabel">Opret kunde</h3>
-				  </div>
-				  @helper.form(routes.Internal.saveCustomer){
-					  <div class="modal-body">
-					    @helper.inputText(customerForm("name"), '_label -> "Navn")
-					  </div>
-					  <div class="modal-footer">
-					    <button class="btn" data-dismiss="modal" aria-hidden="true">Luk</button>
-					    <input type="submit" class="btn btn-primary" value="Gem" />
-					  </div>					  
-				  }
-				</div>
 			</div>
 		</div>
 		@for((customer, idx) <- customers.zipWithIndex){
@@ -48,12 +33,27 @@
 					<h2>Ingen kunder!</h2>
 					<p>Tryk på knappen nedenfor for at oprette en ny kunde.</p>
 					<p>
-						<button class="btn-large btn-success pull-right">Ny kunde</button>
+						<a href="#myModal" role="button" class="btn-large btn-success pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret kunde</a>
 					</p>
 				</div>	
 			</div>
 		</div>  
-	}  
+	} 
+	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+	    <h3 id="myModalLabel">Opret kunde</h3>
+	  </div>
+	  @helper.form(routes.Internal.saveCustomer){
+		  <div class="modal-body">
+		    @helper.inputText(customerForm("name"), '_label -> "Navn")
+		  </div>
+		  <div class="modal-footer">
+		    <button class="btn" data-dismiss="modal" aria-hidden="true">Luk</button>
+		    <input type="submit" class="btn btn-primary" value="Gem" />
+		  </div>					  
+	  }
+	</div> 
 } {
 	<div class="row-fluid">
 		<div class="navbar">

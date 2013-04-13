@@ -1,3 +1,5 @@
+.DS_Store
+/images
 .target
 logs
 /bin

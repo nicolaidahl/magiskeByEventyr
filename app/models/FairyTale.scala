@@ -33,13 +33,24 @@ object FairyTale {
   // -- Queries
   
   /**
-   * Retrieve all users.
+   * Retrieve all fairy tales based on customer.
    */
-  def findAllByCustomer (customerId: Long): Seq[FairyTale] = {
+  def findAllByCustomer (customerId: Int): Seq[FairyTale] = {
     DB.withConnection { implicit connection =>
       SQL("select * from fairy_tale where customerId={customerId}").on(
     	'customerId -> customerId
       ).as(FairyTale.simple *)
+    }
+  }
+  
+  /**
+   * Retrieve one fairy tale based on id.
+   */
+  def findById (id: Int): Option[FairyTale] = {
+    DB.withConnection { implicit connection =>
+      SQL("select * from fairy_tale where id={id}").on(
+    	'id -> id
+      ).as(FairyTale.simple.singleOpt)
     }
   }
    
@@ -63,6 +74,14 @@ object FairyTale {
       
       fairyTale
       
+    }
+  }
+  
+  def getLeads(fairyTaleId: Int) : Seq[Lead] = {
+    DB.withConnection { implicit connection =>
+      SQL("select * from lead where fairyTaleId={fairyTaleId}").on(
+    	'fairyTaleId -> fairyTaleId
+      ).as(Lead.simple *)
     }
   }
 }

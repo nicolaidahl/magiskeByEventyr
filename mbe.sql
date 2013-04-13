@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.29, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.14  Distrib 5.5.30-MariaDB, for osx10.8 (i386)
 --
 -- Host: localhost    Database: eventyr
 -- ------------------------------------------------------
--- Server version	5.5.29-0ubuntu0.12.10.1
+-- Server version	5.5.30-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -36,15 +36,6 @@ CREATE TABLE `creating` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `creating`
---
-
-LOCK TABLES `creating` WRITE;
-/*!40000 ALTER TABLE `creating` DISABLE KEYS */;
-/*!40000 ALTER TABLE `creating` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `customer`
 --
 
@@ -55,17 +46,8 @@ CREATE TABLE `customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `customer`
---
-
-LOCK TABLES `customer` WRITE;
-/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `fairy_tale`
@@ -83,17 +65,8 @@ CREATE TABLE `fairy_tale` (
   PRIMARY KEY (`id`),
   KEY `customerId` (`customerId`),
   CONSTRAINT `fairy_tale_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `fairy_tale`
---
-
-LOCK TABLES `fairy_tale` WRITE;
-/*!40000 ALTER TABLE `fairy_tale` DISABLE KEYS */;
-/*!40000 ALTER TABLE `fairy_tale` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `lead`
@@ -106,24 +79,16 @@ CREATE TABLE `lead` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `fairyTaleId` int(11) DEFAULT NULL,
   `name` varchar(40) DEFAULT NULL,
-  `soundFile` varchar(20) DEFAULT NULL,
-  `imageFile` varchar(20) DEFAULT NULL,
+  `soundFile` varchar(50) DEFAULT NULL,
+  `imageFile` varchar(50) DEFAULT NULL,
+  `priority` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `soundFile` (`soundFile`),
   UNIQUE KEY `imageFile` (`imageFile`),
   KEY `fairyTaleId` (`fairyTaleId`),
   CONSTRAINT `lead_ibfk_1` FOREIGN KEY (`fairyTaleId`) REFERENCES `fairy_tale` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `lead`
---
-
-LOCK TABLES `lead` WRITE;
-/*!40000 ALTER TABLE `lead` DISABLE KEYS */;
-/*!40000 ALTER TABLE `lead` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `play_evolutions`
@@ -145,15 +110,6 @@ CREATE TABLE `play_evolutions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `play_evolutions`
---
-
-LOCK TABLES `play_evolutions` WRITE;
-/*!40000 ALTER TABLE `play_evolutions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `play_evolutions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `privilege`
 --
 
@@ -165,16 +121,6 @@ CREATE TABLE `privilege` (
   PRIMARY KEY (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `privilege`
---
-
-LOCK TABLES `privilege` WRITE;
-/*!40000 ALTER TABLE `privilege` DISABLE KEYS */;
-INSERT INTO `privilege` VALUES ('photography'),('script'),('sound');
-/*!40000 ALTER TABLE `privilege` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -192,16 +138,6 @@ CREATE TABLE `user` (
   PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('lalaj@lalaj.com','lalaj','secret',NULL,'admin');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -212,4 +148,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-04-01 23:09:02
+-- Dump completed on 2013-04-13 10:39:30

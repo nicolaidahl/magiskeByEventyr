@@ -8,16 +8,20 @@ GET		/about									controllers.Application.about
 GET		/fairyTales/:id							controllers.Application.fairyTale(id: Int)
 
 # Internal content
-GET		/internal								controllers.Internal.index
-POST	/internal								controllers.Internal.saveCustomer
-GET		/internal/:customerId/fairytales		controllers.Internal.fairyTales(customerId: Int)
-POST	/internal/:customerId/fairytales		controllers.Internal.saveFairyTale(customerId: Int)
-GET		/internal/:customerId/fairytales/:id	controllers.Internal.fairyTale(customerId: Int, id: Int)
+GET		/internal										controllers.Internal.index
+POST	/internal										controllers.Internal.saveCustomer
+GET		/internal/:customerId/fairytales				controllers.Internal.fairyTales(customerId: Int)
+POST	/internal/:customerId/fairytales				controllers.Internal.saveFairyTale(customerId: Int)
+GET		/internal/fairytales/:id						controllers.Internal.fairyTale(id: Int)
+POST	/internal/fairytales/newLead					controllers.Internal.newLead
 
 # Authentication
 GET     /internal/login             controllers.Internal.login
 POST    /internal/login             controllers.Internal.authenticate
 GET     /internal/logout            controllers.Internal.logout
+
+# Javascript routing
+GET 	/assets/javascripts/internal/routes		controllers.Internal.javascriptRoutes				
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

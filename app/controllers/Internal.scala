@@ -10,6 +10,10 @@ import models.Customer
 import models.FairyTale
 import play.mvc.Http.Context
 import views.html.defaultpages.badRequest
+import java.io.File
+import models.Lead
+import org.joda.time.DateTime
+import java.security.MessageDigest
 
 object Internal extends Controller with Secured {
 	
@@ -65,15 +69,57 @@ object Internal extends Controller with Secured {
 	  	)
 	}
 	
-	def fairyTale (customerId: Int, id: Int) = IsAuthenticated { username => _ =>
+	//TODO: Return error if None!
+	def fairyTale (id: Int) = IsAuthenticated { username => _ =>
 	    User.findByEmail(username).map { user =>
-	    	Ok(views.html.Internal.fairytale())
+	      FairyTale.findById(id) match {
+	        case None => BadRequest(views.html.Internal.index(Customer.findAll, customerForm))
+	        case Some (fairyTale) => Ok(views.html.Internal.fairytale(fairyTale, leadForm))
+	      }
+	    	
 	    }.getOrElse(Forbidden)
 	}
 	
 	def newAdventure = Action {
 		implicit request => Ok("Internal new adventure")
 	}
+	
+	def leadForm = Form(
+	    mapping(
+	        "id" -> optional[Int](number),
+	        "fairyTaleId" -> number,
+	        "name" -> text,
+	        "soundFile" -> optional[String](text),
+	        "imageFile" -> optional[String](text),
+	        "priority" -> number
+ 	    )(Lead.apply)(Lead.unapply)
+	)
+	
+	def newLead = Action(parse.multipartFormData) { implicit request =>
+	  val form = leadForm.bindFromRequest();
+	  val lead = form.get
+	  val picOpt = request.body.file("leadImage")
+	  
+	  picOpt match {
+	    case None => BadRequest("Something went wrong") 
+	    case Some (pic) =>	      	  
+	      import java.io.File
+	      	 
+	      val now = DateTime.now()
+	      val fairyIdPlusNow = lead.fairyTaleId + now.toString()
+	      
+	      
+	      val filename = "./images/fairytales/" + lead.fairyTaleId + "/leads/" + fairyIdPlusNow
+	      pic.ref.moveTo(new File(filename))
+
+
+	      lead.imageFile = Some(fairyIdPlusNow)
+	      val created = Lead.create(lead)
+	      
+	      Redirect(routes.Internal.fairyTale(lead.fairyTaleId))
+	  }
+	  
+  }
 	
 	// -- Authentication
 
@@ -111,10 +157,19 @@ object Internal extends Controller with Secured {
       "success" -> "You've been logged out"
     )
   }
+  
+  def javascriptRoutes() = Action { implicit request =>
+    Ok(
+      Routes.javascriptRouter("jsRoutes")(
+        // Routes
+        //controllers.routes.javascript.Internal.saveLeadImage
+      )
+    ).as(JAVASCRIPT)
+  }
 }
 
 /**
- * Internaæ security features implemented
+ * Internal security features implemented
  */
 trait Secured {
   

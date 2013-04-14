@@ -17,112 +17,6 @@ import java.security.MessageDigest
 
 object Internal extends Controller with Secured {
 	
-	def index = IsAuthenticated { 
-	  username => _ =>
-	    User.findByEmail(username).map { user =>
-	    	Ok(views.html.Internal.index(Customer.findAll, customerForm))
-	    }.getOrElse(Forbidden)
-	}
-	
-
-	
-	def customerForm = Form(
-	    mapping(
-	        "id" -> optional[Int](number),
-	        "name" -> text
-	    )(Customer.apply)(Customer.unapply)
-	)
-	
-	def saveCustomer = Action { implicit request =>
-	  	customerForm.bindFromRequest.fold(
-	  			errors => BadRequest(views.html.Internal.index(Customer.findAll, errors)),
-	  			customer => {
-	  			  Customer.create(customer)
-	  			  Redirect(routes.Internal.index)
-	  			}
-	  	)
-	}
-	
-	def fairyTales (customerId: Int) = IsAuthenticated { username => _ =>
-	    User.findByEmail(username).map { user =>
-	    	Ok(views.html.Internal.fairytales(customerId, FairyTale.findAllByCustomer(customerId), fairyTaleForm))
-	    }.getOrElse(Forbidden)
-	}
-	
-	def fairyTaleForm = Form(
-	    mapping(
-	        "id" -> optional[Int](number),
-	        "customerId" -> number,
-	        "name" -> text,
-	        "dueDate" -> jodaDate("yyyy-MM-dd"),
-	        "briefing" -> text
-	    )(FairyTale.apply)(FairyTale.unapply)
-	)
-	
-	def saveFairyTale (customerId: Int) = Action { implicit request =>
-	  	fairyTaleForm.bindFromRequest.fold(
-	  			errors => BadRequest(views.html.Internal.fairytales(customerId, FairyTale.findAllByCustomer(customerId), errors)),
-	  			fairyTale => {
-	  			  FairyTale.create(fairyTale)
-	  			  Redirect(routes.Internal.fairyTales(customerId))
-	  			}
-	  	)
-	}
-	
-	//TODO: Return error if None!
-	def fairyTale (id: Int) = IsAuthenticated { username => _ =>
-	    User.findByEmail(username).map { user =>
-	      FairyTale.findById(id) match {
-	        case None => BadRequest(views.html.Internal.index(Customer.findAll, customerForm))
-	        case Some (fairyTale) => Ok(views.html.Internal.fairytale(fairyTale, leadForm))
-	      }
-	    	
-	    }.getOrElse(Forbidden)
-	}
-	
-	def newAdventure = Action {
-		implicit request => Ok("Internal new adventure")
-	}
-	
-	def leadForm = Form(
-	    mapping(
-	        "id" -> optional[Int](number),
-	        "fairyTaleId" -> number,
-	        "name" -> text,
-	        "soundFile" -> optional[String](text),
-	        "imageFile" -> optional[String](text),
-	        "priority" -> number
- 	    )(Lead.apply)(Lead.unapply)
-	)
-	
-	def newLead = Action(parse.multipartFormData) { implicit request =>
-	  val form = leadForm.bindFromRequest();
-	  val lead = form.get
-	  val picOpt = request.body.file("leadImage")
-	  
-	  picOpt match {
-	    case None => BadRequest("Something went wrong") 
-	    case Some (pic) =>	      	  
-	      import java.io.File
-	      	 
-	      val now = DateTime.now()
-	      val fairyIdPlusNow = lead.fairyTaleId + now.toString()
-	      
-	      
-	      val filename = "./images/fairytales/" + lead.fairyTaleId + "/leads/" + fairyIdPlusNow
-	      pic.ref.moveTo(new File(filename))
-
-
-	      lead.imageFile = Some(fairyIdPlusNow)
-	      val created = Lead.create(lead)
-	      
-	      Redirect(routes.Internal.fairyTale(lead.fairyTaleId))
-	  }
-	  
-  }
-	
-	// -- Authentication
-
   val loginForm = Form(
     tuple(
       "email" -> text,
@@ -145,7 +39,7 @@ object Internal extends Controller with Secured {
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.Internal.login(formWithErrors)),
-      user => Redirect(routes.Internal.index).withSession("email" -> user._1)
+      user => Redirect(routes.InternalCustomer.customers).withSession("email" -> user._1)
     )
   }
 
@@ -182,8 +76,6 @@ trait Secured {
    * Redirect to login if the user in not authorized.
    */
   private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Internal.login)
-  
-  // --
   
   /** 
    * Action for authenticated users.

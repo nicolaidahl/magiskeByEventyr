@@ -19,10 +19,10 @@ object Lead {
     get[Int]("lead.id") ~
     get[Int]("lead.fairyTaleId") ~
     get[String]("lead.name") ~
-    get[String]("lead.soundFile") ~
-    get[String]("lead.imageFile") ~ 
+    get[Option[String]]("lead.soundFile") ~
+    get[Option[String]]("lead.imageFile") ~ 
     get[Int]("lead.priority") map {
-      case id~fairyTaleId~name~soundFile~imageFile~priority => Lead(Some(id), fairyTaleId, name, Some(""), Some(imageFile), priority)
+      case id~fairyTaleId~name~soundFile~imageFile~priority => Lead(Some(id), fairyTaleId, name, soundFile, imageFile, priority)
     }
   }
 
@@ -36,7 +36,7 @@ object Lead {
 	      "id" -> Json.toJson(lead.id),
 	      "fairyTaleId" -> Json.toJson(lead.fairyTaleId),
 	      "name" -> Json.toJson(lead.name),
-	      "soundFile" -> Json.toJson("/assets/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.id.get + "/" + lead.soundFile.get),
+	      "soundFile" -> Json.toJson("/assets/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.id.get + "/" + lead.soundFile.getOrElse("")),
 	      "imageFile" -> Json.toJson("/assets/img/fairytales/" + lead.fairyTaleId + "/leads/" + lead.imageFile.get) //TODO: Add lead id to path
       )
 	)
@@ -78,7 +78,7 @@ object Lead {
       ).on(
         'fairyTaleId -> lead.fairyTaleId,
         'name -> lead.name,
-        'soundFile -> DateTime.now().toString(), //TODO
+        'soundFile -> lead.soundFile,
         'imageFile -> lead.imageFile,
         'priority -> lead.priority
       ).executeUpdate()
@@ -100,7 +100,7 @@ object Lead {
       ).on(
         'id -> lead.id,
         'name -> lead.name,
-        'soundFile -> DateTime.now().toString(), //TODO
+        'soundFile -> lead.soundFile,
         'imageFile -> lead.imageFile,
         'priority -> lead.priority
       ).executeUpdate()

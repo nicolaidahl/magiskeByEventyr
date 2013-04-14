@@ -80,14 +80,15 @@ object InternalFairyTale extends Controller with Secured {
   	  	}
   	  	val now = DateTime.now()
   	  	val fileName = now.toString() + fileExtension
+  	  	
   	  	//TODO: change path to include lead id
   	  	val file = "./public/img/fairytales/" + lead.fairyTaleId + "/leads/" + fileName
   	  	pic.ref.moveTo(new File(file))
 
-  	  	lead.imageFile = Some(fileName)	  
+  	  	lead.imageFile = Some(fileName)	
+  	  	//Create lead
   	  	val created = Lead.create(lead)
-	      
-  	  	Redirect(routes.InternalFairyTale.fairyTale(created.fairyTaleId))
+	    Redirect(routes.InternalFairyTale.fairyTale(created.fairyTaleId))
 	}	  
   }
   
@@ -112,9 +113,9 @@ object InternalFairyTale extends Controller with Secured {
   	  	  case Some (head) => "." + head
   	  	}
   	  	val now = DateTime.now()
-  	  	val fileName = now.toString() + "." + fileExtension;
+  	  	val fileName = now.toString() + fileExtension
   	  	
-  	  	val file = "./public/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.id + "/" + fileName
+  	  	val file = "./public/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.id.get + "/" + fileName
   	  	audio.ref.moveTo(new File(file))
 
   	  	lead.soundFile = Some(fileName)

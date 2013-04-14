@@ -2,7 +2,11 @@
 --
 -- Host: localhost    Database: eventyr
 -- ------------------------------------------------------
+<<<<<<< HEAD:mbe.sql
 -- Server version	5.5.30-MariaDB-log
+=======
+-- Server version	5.5.30-MariaDB
+>>>>>>> 927e0dee7f924666fa0d4a41537622a26d016bf0:dump.sql
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -46,7 +50,11 @@ CREATE TABLE `customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
+<<<<<<< HEAD:mbe.sql
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+=======
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+>>>>>>> 927e0dee7f924666fa0d4a41537622a26d016bf0:dump.sql
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +73,11 @@ CREATE TABLE `fairy_tale` (
   PRIMARY KEY (`id`),
   KEY `customerId` (`customerId`),
   CONSTRAINT `fairy_tale_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`)
+<<<<<<< HEAD:mbe.sql
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+=======
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+>>>>>>> 927e0dee7f924666fa0d4a41537622a26d016bf0:dump.sql
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,10 +99,83 @@ CREATE TABLE `lead` (
   UNIQUE KEY `imageFile` (`imageFile`),
   KEY `fairyTaleId` (`fairyTaleId`),
   CONSTRAINT `lead_ibfk_1` FOREIGN KEY (`fairyTaleId`) REFERENCES `fairy_tale` (`id`)
+<<<<<<< HEAD:mbe.sql
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+=======
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lead`
+--
+
+LOCK TABLES `lead` WRITE;
+/*!40000 ALTER TABLE `lead` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lead` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `leadState`
+--
+
+DROP TABLE IF EXISTS `leadState`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `leadState` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `leadState`
+--
+
+LOCK TABLES `leadState` WRITE;
+/*!40000 ALTER TABLE `leadState` DISABLE KEYS */;
+INSERT INTO `leadState` VALUES (1,'image'),(2,'audio');
+/*!40000 ALTER TABLE `leadState` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `leadStepComment`
+--
+
+DROP TABLE IF EXISTS `leadStepComment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `leadStepComment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `leadId` int(11) NOT NULL DEFAULT '0',
+  `stepId` int(11) NOT NULL DEFAULT '0',
+  `userMail` varchar(100) NOT NULL,
+  `postDate` date DEFAULT NULL,
+  `comment` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `leadId` (`leadId`),
+  KEY `stepId` (`stepId`),
+  KEY `userMail` (`userMail`),
+  CONSTRAINT `leadIdForeign_1` FOREIGN KEY (`leadId`) REFERENCES `lead` (`id`),
+  CONSTRAINT `stepIdForeign_1` FOREIGN KEY (`stepId`) REFERENCES `leadState` (`id`),
+  CONSTRAINT `userMailForeign_1` FOREIGN KEY (`userMail`) REFERENCES `user` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `leadStepComment`
+--
+
+LOCK TABLES `leadStepComment` WRITE;
+/*!40000 ALTER TABLE `leadStepComment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `leadStepComment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+>>>>>>> 927e0dee7f924666fa0d4a41537622a26d016bf0:dump.sql
 -- Table structure for table `play_evolutions`
 --
 
@@ -148,4 +233,8 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+<<<<<<< HEAD:mbe.sql
 -- Dump completed on 2013-04-13 10:39:30
+=======
+-- Dump completed on 2013-04-12 14:17:00
+>>>>>>> 927e0dee7f924666fa0d4a41537622a26d016bf0:dump.sql

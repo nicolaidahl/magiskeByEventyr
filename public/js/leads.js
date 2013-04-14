@@ -14,7 +14,9 @@ $(function(){
 				//Story tab
 				
 				//Audio tab
-				$('#audio-lead-picture').attr('src', lead.imageFile)
+				$('#audio-lead-id').val(lead.id);
+				$('#audio-lead-picture').attr('src', lead.imageFile);
+				$('#audio-lead-audio').attr('src', lead.soundFile);
 			},
 			error: function(data) {
 				alert("An error occured: " + data);

@@ -10,73 +10,13 @@ import models.Customer
 import models.FairyTale
 import play.mvc.Http.Context
 import views.html.defaultpages.badRequest
+import java.io.File
+import models.Lead
+import org.joda.time.DateTime
+import java.security.MessageDigest
 
 object Internal extends Controller with Secured {
 	
-	def index = IsAuthenticated { 
-	  username => _ =>
-	    User.findByEmail(username).map { user =>
-	    	Ok(views.html.Internal.index(Customer.findAll, customerForm))
-	    }.getOrElse(Forbidden)
-	}
-	
-
-	
-	def customerForm = Form(
-	    mapping(
-	        "id" -> optional[Int](number),
-	        "name" -> text
-	    )(Customer.apply)(Customer.unapply)
-	)
-	
-	def saveCustomer = Action { implicit request =>
-	  	customerForm.bindFromRequest.fold(
-	  			errors => BadRequest(views.html.Internal.index(Customer.findAll, errors)),
-	  			customer => {
-	  			  Customer.create(customer)
-	  			  Redirect(routes.Internal.index)
-	  			}
-	  	)
-	}
-	
-	def fairyTales (customerId: Int) = IsAuthenticated { username => _ =>
-	    User.findByEmail(username).map { user =>
-	    	Ok(views.html.Internal.fairytales(customerId, FairyTale.findAllByCustomer(customerId), fairyTaleForm))
-	    }.getOrElse(Forbidden)
-	}
-	
-	def fairyTaleForm = Form(
-	    mapping(
-	        "id" -> optional[Int](number),
-	        "customerId" -> number,
-	        "name" -> text,
-	        "dueDate" -> jodaDate("yyyy-MM-dd"),
-	        "briefing" -> text
-	    )(FairyTale.apply)(FairyTale.unapply)
-	)
-	
-	def saveFairyTale (customerId: Int) = Action { implicit request =>
-	  	fairyTaleForm.bindFromRequest.fold(
-	  			errors => BadRequest(views.html.Internal.fairytales(customerId, FairyTale.findAllByCustomer(customerId), errors)),
-	  			fairyTale => {
-	  			  FairyTale.create(fairyTale)
-	  			  Redirect(routes.Internal.fairyTales(customerId))
-	  			}
-	  	)
-	}
-	
-	def fairyTale (customerId: Int, id: Int) = IsAuthenticated { username => _ =>
-	    User.findByEmail(username).map { user =>
-	    	Ok(views.html.Internal.fairytale())
-	    }.getOrElse(Forbidden)
-	}
-	
-	def newAdventure = Action {
-		implicit request => Ok("Internal new adventure")
-	}
-	
-	// -- Authentication
-
   val loginForm = Form(
     tuple(
       "email" -> text,
@@ -99,7 +39,7 @@ object Internal extends Controller with Secured {
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.Internal.login(formWithErrors)),
-      user => Redirect(routes.Internal.index).withSession("email" -> user._1)
+      user => Redirect(routes.InternalCustomer.customers).withSession("email" -> user._1)
     )
   }
 
@@ -111,10 +51,18 @@ object Internal extends Controller with Secured {
       "success" -> "You've been logged out"
     )
   }
+  
+  def javascriptRoutes() = Action { implicit request =>
+    Ok(
+      Routes.javascriptRouter("jsRoutes")(
+        controllers.routes.javascript.InternalFairyTale.getLead
+      )
+    ).as(JAVASCRIPT)
+  }
 }
 
 /**
- * Internaæ security features implemented
+ * Internal security features implemented
  */
 trait Secured {
   
@@ -127,8 +75,6 @@ trait Secured {
    * Redirect to login if the user in not authorized.
    */
   private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Internal.login)
-  
-  // --
   
   /** 
    * Action for authenticated users.

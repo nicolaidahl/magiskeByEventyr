@@ -13,7 +13,7 @@
 					<ul class="thumbnails">
 			}					
 						<li class="span3">
-							<a href="@routes.Internal.fairyTales(customer.id.get)">
+							<a href="@routes.InternalFairyTale.fairyTales(customer.id.get)">
 								<div class="thumbnail">
 									<h3 class="text-center">@customer.name</h3>
 									<img src="http://www.templatis.com/images/free/free-generic-logo-0029.jpg" alt="customer logo" />
@@ -44,7 +44,7 @@
 	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 	    <h3 id="myModalLabel">Opret kunde</h3>
 	  </div>
-	  @helper.form(routes.Internal.saveCustomer){
+	  @helper.form(routes.InternalCustomer.saveCustomer){
 		  <div class="modal-body">
 		    @helper.inputText(customerForm("name"), '_label -> "Navn")
 		  </div>

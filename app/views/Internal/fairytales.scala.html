@@ -17,7 +17,7 @@
 						<ul class="thumbnails">
 				}	
 							<li class="span3">
-								<a href="@routes.Internal.fairyTale(fairyTale.customerId, fairyTale.id.getOrElse(-1))">
+								<a href="@routes.InternalFairyTale.fairyTale(fairyTale.id.getOrElse(-1))">
 								<div class="thumbnail">
 									<h3 class="text-center">@fairyTale.name</h3>
 									<img src="http://www.templatis.com/images/free/free-generic-logo-0029.jpg" alt="customer logo" />
@@ -45,10 +45,10 @@
 		}
 		<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		  <div class="modal-header">
-		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 		    <h3 id="myModalLabel">Opret eventyr</h3>
 		  </div>
-		  @helper.form(routes.Internal.saveFairyTale(customerId)){
+		  @helper.form(routes.InternalFairyTale.saveFairyTale(customerId)){
 			  <div class="modal-body">
 			  	@helper.inputText(fairyTaleForm("name"), '_label -> "Eventyr navn")
 			  	@helper.inputText(fairyTaleForm("dueDate"),  '_label -> "Deadline", '_help -> "Eksempel: 2013-04-27")
@@ -76,7 +76,7 @@
 		  <div class="navbar-inner">
 		    <a class="brand" href="#">TODO: LOGO</a>
 		    <ul class="nav">
-		    	<li><a href="@routes.Internal.index">Kundeoversigt</a></li>
+		    	<li><a href="@routes.InternalCustomer.customers">Kundeoversigt</a></li>
 		    </ul>
 		    <ul class="nav pull-right">				    	
 		      	<li><a href="#">Indstillinger</a></li><!-- TODO: ONLY IF ADMIN USER -->

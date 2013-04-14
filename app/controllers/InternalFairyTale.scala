@@ -11,6 +11,7 @@ import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import org.joda.time.DateTime
 import play.api.libs.json
+import play.api.libs.MimeTypes
 
 object InternalFairyTale extends Controller with Secured {
   
@@ -67,19 +68,23 @@ object InternalFairyTale extends Controller with Secured {
   	val picOpt = request.body.file("leadImage")
   
   	picOpt match {
-  	  case None => BadRequest("Something went wrong") 
+  	  case None => BadRequest("No file uploaded.") 
   	  case Some (pic) =>	      	  
   	  	import java.io.File
       	 
   	  	val now = DateTime.now()
   	  	val fairyIdPlusNow = lead.fairyTaleId + now.toString()
-      
-      
-  	  	val filename = "./images/fairytales/" + lead.fairyTaleId + "/leads/" + fairyIdPlusNow
+  	  	
+  	  	val fileExtension = pic.filename.split('.').takeRight(1).headOption match {
+  	  	  case None => ""
+  	  	  case Some (head) => "." + head
+  	  	}
+  	  	
+  	  	val filename = "./public/img/fairytales/" + lead.fairyTaleId + "/leads/" + fairyIdPlusNow + fileExtension
   	  	pic.ref.moveTo(new File(filename))
 
 
-  	  	lead.imageFile = Some(fairyIdPlusNow)
+  	  	lead.imageFile = Some(fairyIdPlusNow + fileExtension)
   	  	val created = Lead.create(lead)
 	      
   	  	Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))

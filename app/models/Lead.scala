@@ -27,15 +27,17 @@ object Lead {
   }
 
   /**
-   * Parse a JSon lead from a Lead
+   * Parse a JSon lead containing html-ready values (file paths) from a Lead
    */
   
   def json (lead: Lead) = {
     Json.toJson(
 	  Map(
+	      "id" -> Json.toJson(lead.id),
+	      "fairyTaleId" -> Json.toJson(lead.fairyTaleId),
 	      "name" -> Json.toJson(lead.name),
-	      "soundFile" -> Json.toJson(lead.soundFile),
-	      "imageFile" -> Json.toJson(lead.imageFile)
+	      "soundFile" -> Json.toJson("/assets/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.soundFile),
+	      "imageFile" -> Json.toJson("/assets/img/fairytales/" + lead.fairyTaleId + "/leads/" + lead.imageFile.get)
       )
 	)
   }

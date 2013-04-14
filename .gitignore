@@ -1,5 +1,5 @@
 .DS_Store
-/images
+/public/img/fairytales
 .target
 logs
 /bin

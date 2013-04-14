@@ -14,4 +14,7 @@ object InternalAjax extends Controller with Secured {
     request.body.moveTo(new File("/tmp/picture"))
     Ok("File uploaded")
   }
+  
+  
 }
+

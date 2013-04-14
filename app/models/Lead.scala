@@ -7,7 +7,7 @@ import anorm.SqlParser._
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 
-case class Lead(id: Option[Int], fairyTaleId: Int, name: String, soundFile: Option[String], var imageFile: Option[String], priority: Int)
+case class Lead(id: Option[Int], fairyTaleId: Int, name: String, var soundFile: Option[String], var imageFile: Option[String], priority: Int)
 
 object Lead {
 	// -- Parsers
@@ -36,8 +36,8 @@ object Lead {
 	      "id" -> Json.toJson(lead.id),
 	      "fairyTaleId" -> Json.toJson(lead.fairyTaleId),
 	      "name" -> Json.toJson(lead.name),
-	      "soundFile" -> Json.toJson("/assets/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.soundFile),
-	      "imageFile" -> Json.toJson("/assets/img/fairytales/" + lead.fairyTaleId + "/leads/" + lead.imageFile.get)
+	      "soundFile" -> Json.toJson("/assets/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.id.get + "/" + lead.soundFile.get),
+	      "imageFile" -> Json.toJson("/assets/img/fairytales/" + lead.fairyTaleId + "/leads/" + lead.imageFile.get) //TODO: Add lead id to path
       )
 	)
   }
@@ -65,7 +65,7 @@ object Lead {
   }
    
   /**
-   * Create a User.
+   * Create a Lead.
    */
   def create(lead: Lead): Lead = {
     DB.withConnection { implicit connection =>
@@ -77,6 +77,28 @@ object Lead {
         """
       ).on(
         'fairyTaleId -> lead.fairyTaleId,
+        'name -> lead.name,
+        'soundFile -> DateTime.now().toString(), //TODO
+        'imageFile -> lead.imageFile,
+        'priority -> lead.priority
+      ).executeUpdate()
+      
+      lead
+      
+    }
+  }
+  
+  /**
+   * Update a Lead.
+   */
+  def update(lead: Lead): Lead = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          update lead set name={name}, soundFile={soundFile}, imageFile={imageFile}, priority={priority} where id={id}
+        """
+      ).on(
+        'id -> lead.id,
         'name -> lead.name,
         'soundFile -> DateTime.now().toString(), //TODO
         'imageFile -> lead.imageFile,

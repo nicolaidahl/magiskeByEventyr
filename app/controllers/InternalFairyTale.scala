@@ -12,6 +12,7 @@ import play.api.data.validation.Constraints._
 import org.joda.time.DateTime
 import play.api.libs.json
 import play.api.libs.MimeTypes
+import play.data.DynamicForm
 
 object InternalFairyTale extends Controller with Secured {
   
@@ -69,25 +70,24 @@ object InternalFairyTale extends Controller with Secured {
   
   	picOpt match {
   	  case None => BadRequest("No file uploaded.") 
-  	  case Some (pic) =>	      	  
-  	  	import java.io.File
+  	  case Some (pic) =>	      
+  	    
+  	    import java.io.File
       	 
-  	  	val now = DateTime.now()
-  	  	val fairyIdPlusNow = lead.fairyTaleId + now.toString()
-  	  	
   	  	val fileExtension = pic.filename.split('.').takeRight(1).headOption match {
   	  	  case None => ""
   	  	  case Some (head) => "." + head
   	  	}
-  	  	
-  	  	val filename = "./public/img/fairytales/" + lead.fairyTaleId + "/leads/" + fairyIdPlusNow + fileExtension
-  	  	pic.ref.moveTo(new File(filename))
+  	  	val now = DateTime.now()
+  	  	val fileName = now.toString() + fileExtension
+  	  	//TODO: change path to include lead id
+  	  	val file = "./public/img/fairytales/" + lead.fairyTaleId + "/leads/" + fileName
+  	  	pic.ref.moveTo(new File(file))
 
-
-  	  	lead.imageFile = Some(fairyIdPlusNow + fileExtension)
+  	  	lead.imageFile = Some(fileName)	  
   	  	val created = Lead.create(lead)
 	      
-  	  	Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+  	  	Redirect(routes.InternalFairyTale.fairyTale(created.fairyTaleId))
 	}	  
   }
   
@@ -96,5 +96,31 @@ object InternalFairyTale extends Controller with Secured {
       case None => BadRequest("Error")
       case Some (lead) => Ok(Lead.json(lead))
     }
+  }
+  
+  def uploadAudio = Action(parse.multipartFormData) { implicit request =>
+    val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
+  	val soundOpt = request.body.file("leadAudio")
+  
+  	soundOpt match {
+  	  case None => BadRequest("No file uploaded.") 
+  	  case Some (audio) =>	      	  
+  	  	import java.io.File
+      	 
+  	  	val fileExtension = audio.filename.split('.').takeRight(1).headOption match {
+  	  	  case None => ""
+  	  	  case Some (head) => "." + head
+  	  	}
+  	  	val now = DateTime.now()
+  	  	val fileName = now.toString() + "." + fileExtension;
+  	  	
+  	  	val file = "./public/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.id + "/" + fileName
+  	  	audio.ref.moveTo(new File(file))
+
+  	  	lead.soundFile = Some(fileName)
+  	  	//Update lead
+  	  	Lead.update(lead);
+  	  	Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+	}	  
   }
 }

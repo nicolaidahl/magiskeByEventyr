@@ -55,8 +55,7 @@ object Internal extends Controller with Secured {
   def javascriptRoutes() = Action { implicit request =>
     Ok(
       Routes.javascriptRouter("jsRoutes")(
-        // Routes
-        //controllers.routes.javascript.Internal.saveLeadImage
+        controllers.routes.javascript.InternalFairyTale.getLead
       )
     ).as(JAVASCRIPT)
   }

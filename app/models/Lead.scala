@@ -5,6 +5,7 @@ import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 import org.joda.time.DateTime
+import play.api.libs.json.Json
 
 case class Lead(id: Option[Int], fairyTaleId: Int, name: String, soundFile: Option[String], var imageFile: Option[String], priority: Int)
 
@@ -12,7 +13,7 @@ object Lead {
 	// -- Parsers
   
   /**
-   * Parse a User from a ResultSet
+   * Parse a Lead from a ResultSet
    */
   val simple = {
     get[Int]("lead.id") ~
@@ -24,8 +25,20 @@ object Lead {
       case id~fairyTaleId~name~soundFile~imageFile~priority => Lead(Some(id), fairyTaleId, name, Some(""), Some(imageFile), priority)
     }
   }
+
+  /**
+   * Parse a JSon lead from a Lead
+   */
   
-  // -- Queries
+  def json (lead: Lead) = {
+    Json.toJson(
+	  Map(
+	      "name" -> Json.toJson(lead.name),
+	      "soundFile" -> Json.toJson(lead.soundFile),
+	      "imageFile" -> Json.toJson(lead.imageFile)
+      )
+	)
+  }
   
   /**
    * Retrieve all fairy tales based on customer.

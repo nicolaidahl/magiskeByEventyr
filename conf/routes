@@ -8,12 +8,15 @@ GET		/about									controllers.Application.about
 GET		/fairyTales/:id							controllers.Application.fairyTale(id: Int)
 
 # Internal content
-GET		/internal										controllers.InternalCustomer.customers
-POST	/internal										controllers.InternalCustomer.saveCustomer
-GET		/internal/:customerId/fairytales				controllers.InternalFairyTale.fairyTales(customerId: Int)
-POST	/internal/:customerId/fairytales				controllers.InternalFairyTale.saveFairyTale(customerId: Int)
-GET		/internal/fairytales/:id						controllers.InternalFairyTale.fairyTale(id: Int)
-POST	/internal/fairytales/newLead					controllers.InternalFairyTale.newLead
+GET		/internal								controllers.InternalCustomer.customers
+POST	/internal								controllers.InternalCustomer.saveCustomer
+GET		/internal/:customerId/fairytales		controllers.InternalFairyTale.fairyTales(customerId: Int)
+POST	/internal/:customerId/fairytales		controllers.InternalFairyTale.saveFairyTale(customerId: Int)
+GET		/internal/fairytales/:id				controllers.InternalFairyTale.fairyTale(id: Int)
+POST	/internal/fairytales/newLead			controllers.InternalFairyTale.newLead
+
+# Internal AJAX content
+POST	/internal/fairytales/getLead			controllers.InternalFairyTale.getLead(id: Int)
 
 # Authentication
 GET     /internal/login             controllers.Internal.login

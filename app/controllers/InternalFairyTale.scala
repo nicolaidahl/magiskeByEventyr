@@ -4,12 +4,13 @@ import models.FairyTale
 import models.Lead
 import models.User
 import models.Customer
-import org.joda.time.DateTime
 import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
+import org.joda.time.DateTime
+import play.api.libs.json
 
 object InternalFairyTale extends Controller with Secured {
   
@@ -83,5 +84,12 @@ object InternalFairyTale extends Controller with Secured {
 	      
   	  	Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
 	}	  
+  }
+  
+  def getLead (id: Int) = Action { implicit request =>
+    Lead.findById(id) match {
+      case None => BadRequest("Error")
+      case Some (lead) => Ok(Lead.json(lead))
+    }
   }
 }

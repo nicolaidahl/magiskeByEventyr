@@ -1,33 +1,39 @@
 @(fairyTale: FairyTale, leadForm: Form[Lead])
 @Layout.internal_main("Magiske Byeventyr! - Intern brug") {
 	<script type="text/javascript" src="@routes.Internal.javascriptRoutes"></script>
+	<script type="text/javascript" src="@routes.Assets.at("js/leads.js")"></script>
 	<div class="row-fluid" style="margin-bottom: 20px;">
 		<div class="span7 offset1">
 			<div id="map_canvas"></div>
 		</div>
 		<div class="span3">
-			<ul class="nav nav-list">
+			<ul class="nav nav-list lead-list">
 				@if(FairyTale.getLeads(fairyTale.id.get).length == 0){
 					<li class="nav-header">Ingen ledetråde!</li>
 				} else {
 					<li class="nav-header">Ledetråde</li>
 					@for((lead, idx) <- FairyTale.getLeads(fairyTale.id.get).zipWithIndex){
-						<li>@lead.name</li>
+						<li model-id="@lead.id">@lead.name</li>
 					} 
 				}
-				<li class="nav-footer">
-					<a href="#leadModal" role="button" class="btn-small btn-success pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret ledetråd</a>
-				</li>
-				<div id="leadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				  <div class="modal-header">
-				    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-				    <h3 id="myModalLabel">Opret lead</h3>
-				  </div>
-				  @views.html.Internal.templates.lead_form(fairyTale.id.get, leadForm)
-				</div>
 			</ul>
+			<div class="nav-footer">
+				<a href="#leadModal" role="button" class="btn-small btn-primary pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret ledetråd</a>
+			</div>
+			<div id="leadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+			    <h3 id="myModalLabel">Opret lead</h3>
+			  </div>
+			  @views.html.Internal.templates.lead_form(fairyTale.id.get, leadForm)
+			</div>
 		</div>
 	</div>    
+	<div class="row-fluid">
+		<div class="span10 offset1">
+			<h1 id="lead-name"></h1>
+		</div>
+	</div>
 	<div class="row-fluid">
 		<div class="span10 offset1">
 			<ul class="nav nav-tabs" id="fairyTaleTab">

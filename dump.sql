@@ -2,11 +2,7 @@
 --
 -- Host: localhost    Database: eventyr
 -- ------------------------------------------------------
-<<<<<<< HEAD:mbe.sql
--- Server version	5.5.30-MariaDB-log
-=======
 -- Server version	5.5.30-MariaDB
->>>>>>> 927e0dee7f924666fa0d4a41537622a26d016bf0:dump.sql
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -50,11 +46,7 @@ CREATE TABLE `customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-<<<<<<< HEAD:mbe.sql
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
-=======
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
->>>>>>> 927e0dee7f924666fa0d4a41537622a26d016bf0:dump.sql
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,11 +65,7 @@ CREATE TABLE `fairy_tale` (
   PRIMARY KEY (`id`),
   KEY `customerId` (`customerId`),
   CONSTRAINT `fairy_tale_ibfk_1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`)
-<<<<<<< HEAD:mbe.sql
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-=======
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
->>>>>>> 927e0dee7f924666fa0d4a41537622a26d016bf0:dump.sql
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,13 +87,7 @@ CREATE TABLE `lead` (
   UNIQUE KEY `imageFile` (`imageFile`),
   KEY `fairyTaleId` (`fairyTaleId`),
   CONSTRAINT `lead_ibfk_1` FOREIGN KEY (`fairyTaleId`) REFERENCES `fairy_tale` (`id`)
-<<<<<<< HEAD:mbe.sql
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
-=======
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +157,6 @@ LOCK TABLES `leadStepComment` WRITE;
 UNLOCK TABLES;
 
 --
->>>>>>> 927e0dee7f924666fa0d4a41537622a26d016bf0:dump.sql
 -- Table structure for table `play_evolutions`
 --
 
@@ -232,9 +213,4 @@ CREATE TABLE `user` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
-<<<<<<< HEAD:mbe.sql
--- Dump completed on 2013-04-13 10:39:30
-=======
 -- Dump completed on 2013-04-12 14:17:00
->>>>>>> 927e0dee7f924666fa0d4a41537622a26d016bf0:dump.sql

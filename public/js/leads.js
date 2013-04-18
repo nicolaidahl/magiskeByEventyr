@@ -17,7 +17,10 @@ $(function(){
 				//Audio tab
 				$('#audio-lead-id').val(lead.id);
 				$('#audio-lead-picture').attr('src', lead.imageFile);
-				$('#audio-lead-audio').attr('src', lead.soundFile);
+				$("#audio-lead-audio").attr("src", lead.soundFile);
+				var audio = $('#main-player');
+				audio[0].pause();
+				audio[0].load();
 			},
 			error: function(data) {
 				alert("An error occured: " + data);

@@ -46,7 +46,7 @@ object Lead {
 	      "id" -> Json.toJson(lead.id),
 	      "fairyTaleId" -> Json.toJson(lead.fairyTaleId),
 	      "name" -> Json.toJson(lead.name),
-	      "soundFile" -> Json.toJson("/assets/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.id.get + "/" + lead.soundFile.get),
+	      "soundFile" -> Json.toJson("/assets/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.id.get + "/" + lead.soundFile.getOrElse("")),
 	      "imageFile" -> Json.toJson("/assets/img/fairytales/" + lead.fairyTaleId + "/leads/" + lead.imageFile.get) //TODO: Add lead id to path
       )
 	)
@@ -88,7 +88,7 @@ object Lead {
       ).on(
         'fairyTaleId -> lead.fairyTaleId,
         'name -> lead.name,
-        'soundFile -> DateTime.now().toString(), //TODO
+        'soundFile -> lead.soundFile,
         'imageFile -> lead.imageFile,
         'story -> lead.story.getOrElse(""),
         'anchoring -> lead.anchoring.getOrElse(""),
@@ -112,7 +112,7 @@ object Lead {
       ).on(
         'id -> lead.id,
         'name -> lead.name,
-        'soundFile -> DateTime.now().toString(), //TODO
+        'soundFile -> lead.soundFile,
         'imageFile -> lead.imageFile,
         'story -> lead.story,
         'anchoring -> lead.anchoring,

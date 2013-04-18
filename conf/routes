@@ -17,6 +17,7 @@ POST	/internal/fairytales/newLead					controllers.InternalFairyTale.newLead
 POST	/internal/fairytales/uploadAudio				controllers.InternalFairyTale.uploadAudio
 POST	/internal/leads/updateLeadWithStory				controllers.InternalFairyTale.updateLeadWithStory
 POST	/internal/leads/updateLeadWithImage				controllers.InternalFairyTale.updateLeadWithImage
+POST	/internal/leads/disapproveLead					controllers.InternalFairyTale.disapproveLead
 
 # Internal AJAX content
 POST	/internal/fairytales/getLead			controllers.InternalFairyTale.getLead(id: Int)

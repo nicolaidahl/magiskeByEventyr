@@ -1,4 +1,4 @@
-@(fairyTale: FairyTale, leadForm: Form[Lead])
+@(fairyTale: FairyTale, leadForm: Form[Lead], userType: String, leadId: Int = -1)
 @Layout.internal_main("Magiske Byeventyr! - Intern brug") {
 	<script type="text/javascript" src="@routes.Internal.javascriptRoutes"></script>
 	<script type="text/javascript" src="@routes.Assets.at("js/leads.js")"></script>
@@ -9,12 +9,24 @@
 		<div class="span3">
 			<ul class="nav nav-list lead-list">
 				@if(FairyTale.getLeads(fairyTale.id.get).length == 0){
-					<li class="nav-header">Ingen ledetr��de!</li>
+					<li class="nav-header">Ingen ledetråde!</li>
 				} else {
-					<li class="nav-header">Ledetr��de</li>
+					<li class="nav-header">Ledetråde</li>
 					@for((lead, idx) <- FairyTale.getLeads(fairyTale.id.get).zipWithIndex){
 						<li model-id="@lead.id">@lead.name</li>
 					} 
+					<script type="text/javascript">
+					$(function(){
+						var leadId = @leadId;
+						//If no lead was requested to begin with then load the first one
+						if (leadId == -1) {
+							$('.lead-list li:nth-child(2)').click();
+						} else {
+							//Select the requested lead
+							$('.leadList li[model-id=' + leadId + ']').click();
+						}
+					});
+					</script>
 				}
 			</ul>
 			<div class="nav-footer">
@@ -32,8 +44,12 @@
 	<div class="row-fluid">
 		<div class="span10 offset1">
 			<h1 id="lead-name"></h1>
+			@if(userType == "admin"){
+				<button type="button" class="btn-small btn-primary pull-right" id="admin-approve-mode">Godkendelses-mode</button>
+			}
 		</div>
 	</div>
+	
 	<div class="row-fluid">
 		<div class="span10 offset1">
 			<ul class="nav nav-tabs" id="fairyTaleTab">
@@ -60,12 +76,12 @@
 	  					@helper.form(action = routes.InternalFairyTale.updateLeadWithImage, 'enctype -> "multipart/form-data") {
 	  						<textarea name="anchoring" id="image-anchoring" rows="10" cols="1500"></textarea>
 	  						<input type="file" name="image_file">
-	  						<input type="hidden" name="id" id="image-lead-id" value="">
+	  						<input type="hidden" name="id" id="lead-id" value="">
 							<input type="submit" class="btn btn-primary pull-right" value="Gem" />
 						}
 	  				</div>
 	  				<div class="span4">
-	  					<img id="image-lead-image" alt="Picture placeholder" src="">
+	  					<img id="lead-image" alt="Picture placeholder" src="">
 	  				</div>
 	  			</div>
 		  	</div>
@@ -76,8 +92,8 @@
 	  	<div class="span10 offset1">
 	  		<div class="hero-unit">
 	  			@helper.form(action = routes.InternalFairyTale.updateLeadWithStory, 'enctype -> "multipart/form-data") {
-	  				<textarea name="story" id="story-story" rows="10" cols="1500"></textarea>
-	  				<input type="hidden" name="id" id="story-lead-id" value="">
+	  				<textarea name="story" id="lead-story" rows="10" cols="1500"></textarea>
+	  				<input type="hidden" name="id" id="lead-id" value="">
 					<input type="submit" class="btn btn-primary pull-right" value="Gem" />
 				}
 	  		</div>
@@ -96,10 +112,10 @@
 	  			</div>
 	  			<div class="row-fluid">
 	  				<div class="span8">
-	  					<textarea id="audio-lead-story" rows="10" cols="1500" readonly></textarea>
+	  					<textarea id="lead-story" rows="10" cols="1500" readonly></textarea>
 	  				</div>
 	  				<div class="span4">
-	  					<img id="audio-lead-picture" alt="Picture placeholder" src="">
+	  					<img id="lead-image" alt="Picture placeholder" src="">
 	  				</div>
 	  			</div>
 	  			<div class="row-fluid">
@@ -113,7 +129,7 @@
 	  			<div class="row-fluid">
 	  				<div class="span4">
 	  					@helper.form(action = routes.InternalFairyTale.uploadAudio, 'enctype -> "multipart/form-data") {
-	  						<input type="hidden" name="id" id="audio-lead-id" value="">
+	  						<input type="hidden" name="id" id="lead-id" value="">
 							<input type="file" name="leadAudio">
 							<input type="submit" class="btn btn-primary pull-right" value="Gem" />
 	  					}

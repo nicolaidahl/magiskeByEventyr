@@ -62,7 +62,7 @@ object InternalFairyTale extends Controller with Secured {
     User.findByEmail(username).map { user =>
       FairyTale.findById(id) match {
         case None => BadRequest(views.html.Internal.customers(Customer.findAll, InternalCustomer.customerForm))
-        case Some (fairyTale) => Ok(views.html.Internal.fairytale(fairyTale, leadForm))
+        case Some (fairyTale) => Ok(views.html.Internal.fairytale(fairyTale, leadForm, user.userType))
       }    	
     }.getOrElse(Forbidden)
   }
@@ -186,7 +186,9 @@ object InternalFairyTale extends Controller with Secured {
     Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
   }
   
-  
+  def disapproveLead = Action(parse.multipartFormData) { implicit request =>
+    Ok("TODO: Implement")
+  }
 }
 
 

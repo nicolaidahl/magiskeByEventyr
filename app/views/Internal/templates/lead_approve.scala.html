@@ -1,0 +1,55 @@
+<div class="row-fluid">
+	<div class="span4">
+		<img id="approve-lead-picture" alt="Picture placeholder" src="">
+	</div>
+	<div class="span4">
+		<audio id="approve-lead-player" controls>
+		  <source id="approve-lead-audio" src="" type="audio/mpeg">
+		  Your browser does not support the audio element.
+		</audio>
+	</div>
+	<div class="span4">
+		<div class="row-fluid">
+			<p>Godkendt?</p>
+		</div>
+		<div class="row-fluid">
+			<div class="span3 offset2">
+				<button type="button" class="btn-small btn-success">Ja</button>
+			</div>
+			<div class="span3 offset2">
+				<a href="#approve-lead-no" role="button" class="btn-small btn-danger" data-toggle="modal" >Nej</a>
+				<div id="leadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-header">
+				    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+				    <h3></h3>
+				  </div>
+				  @helper.form(action = routes.InternalFairyTale.disapproveLead) {
+					  <div class="row-fluid">
+					  	<p>Hvilke dele kan ikke godkendes?</p>
+					  </div>
+					  <div class="row-fluid">
+						  <label class="checkbox">
+				            <input type="checkbox" name="approve-lead-image" value="no" > Billede
+				          </label>
+					  </div>
+					  <div class="row-fluid">
+					  	<label class="checkbox">
+			            	<input type="checkbox" name="approve-lead-audio" value="no" > Lyd
+			          	</label>
+					  </div>
+					  <div class="row-fluid">
+					  	<p>Besked til forfatter/fotograf</p>
+					  </div>
+					  <div class="row-fluid">
+					  	<textarea id="approve-lead-comment" name="comment" rows="10" cols="1500"></textarea>
+					  </div>
+				  	  <div class="modal-footer">
+					    <button class="btn" data-dismiss="modal" aria-hidden="true">Luk</button>
+					    <input type="submit" class="btn btn-primary" value="Bekræft" />
+					  </div>	
+				  }
+				</div>
+			</div>	
+		</div>
+	</div>
+</div>

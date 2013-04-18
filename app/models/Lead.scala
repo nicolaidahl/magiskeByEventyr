@@ -7,7 +7,14 @@ import anorm.SqlParser._
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 
-case class Lead(id: Option[Int], fairyTaleId: Int, name: String, var soundFile: Option[String], var imageFile: Option[String], priority: Int)
+case class Lead(id: Option[Int], 
+				fairyTaleId: Int, 
+				name: String, 
+				var soundFile: Option[String], 
+				var imageFile: Option[String], 
+				var story: Option[String],
+				var anchoring: Option[String],
+				priority: Int)
 
 object Lead {
 	// -- Parsers
@@ -21,8 +28,11 @@ object Lead {
     get[String]("lead.name") ~
     get[String]("lead.soundFile") ~
     get[String]("lead.imageFile") ~ 
+    get[String]("lead.story") ~
+    get[String]("lead.anchoring") ~
     get[Int]("lead.priority") map {
-      case id~fairyTaleId~name~soundFile~imageFile~priority => Lead(Some(id), fairyTaleId, name, Some(""), Some(imageFile), priority)
+      case id~fairyTaleId~name~soundFile~imageFile~story~anchoring~priority => 
+        Lead(Some(id), fairyTaleId, name, Some(""), Some(imageFile), Some(story), Some(anchoring), priority)
     }
   }
 
@@ -71,8 +81,8 @@ object Lead {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          insert into lead (fairyTaleId, name, soundFile, imageFile, priority) values (
-    		  {fairyTaleId}, {name}, {soundFile}, {imageFile}, {priority}
+          insert into lead (fairyTaleId, name, soundFile, imageFile, story, priority) values (
+    		  {fairyTaleId}, {name}, {soundFile}, {imageFile}, {story}, {anchoring}, {priority}
           )
         """
       ).on(
@@ -80,6 +90,8 @@ object Lead {
         'name -> lead.name,
         'soundFile -> DateTime.now().toString(), //TODO
         'imageFile -> lead.imageFile,
+        'story -> lead.story.getOrElse(""),
+        'anchoring -> lead.anchoring.getOrElse(""),
         'priority -> lead.priority
       ).executeUpdate()
       
@@ -95,13 +107,15 @@ object Lead {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          update lead set name={name}, soundFile={soundFile}, imageFile={imageFile}, priority={priority} where id={id}
+          update lead set name={name}, soundFile={soundFile}, imageFile={imageFile}, story={story}, anchoring={anchoring}, priority={priority} where id={id}
         """
       ).on(
         'id -> lead.id,
         'name -> lead.name,
         'soundFile -> DateTime.now().toString(), //TODO
         'imageFile -> lead.imageFile,
+        'story -> lead.story,
+        'anchoring -> lead.anchoring,
         'priority -> lead.priority
       ).executeUpdate()
       

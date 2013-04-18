@@ -15,7 +15,7 @@ POST	/internal/:customerId/fairytales				controllers.InternalFairyTale.saveFairy
 GET		/internal/fairytales/:id						controllers.InternalFairyTale.fairyTale(id: Int)
 POST	/internal/fairytales/newLead					controllers.InternalFairyTale.newLead
 POST	/internal/fairytales/uploadAudio				controllers.InternalFairyTale.uploadAudio
-POST	/internal/leads/:leadId/updateLeadWithStory		controllers.InternalFairyTale.updateLead(leadId: Int)
+POST	/internal/leads/updateLeadWithStory		controllers.InternalFairyTale.updateLeadWithStory
 
 # Internal AJAX content
 POST	/internal/fairytales/getLead			controllers.InternalFairyTale.getLead(id: Int)

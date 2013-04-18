@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: eventyr
 -- ------------------------------------------------------
--- Server version	5.5.30-MariaDB-log
+-- Server version	5.5.30-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -111,12 +111,14 @@ CREATE TABLE `lead` (
   `soundFile` varchar(50) DEFAULT NULL,
   `imageFile` varchar(50) DEFAULT NULL,
   `priority` int(11) DEFAULT NULL,
+  `story` varchar(256) DEFAULT NULL,
+  `anchoring` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `soundFile` (`soundFile`),
   UNIQUE KEY `imageFile` (`imageFile`),
   KEY `fairyTaleId` (`fairyTaleId`),
   CONSTRAINT `lead_ibfk_1` FOREIGN KEY (`fairyTaleId`) REFERENCES `fairy_tale` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,7 +127,63 @@ CREATE TABLE `lead` (
 
 LOCK TABLES `lead` WRITE;
 /*!40000 ALTER TABLE `lead` DISABLE KEYS */;
+INSERT INTO `lead` VALUES (22,4,'Første ledetråd','2013-04-14T17:39:47.600+02:00','2013-04-14T17:39:47.587+02:00.jpg',0,'',NULL),(23,4,'Anden','2013-04-18T11:04:26.201+02:00','2013-04-14T17:42:08.417+02:00.jpg',0,'hej',NULL);
 /*!40000 ALTER TABLE `lead` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `leadState`
+--
+
+DROP TABLE IF EXISTS `leadState`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `leadState` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `leadState`
+--
+
+LOCK TABLES `leadState` WRITE;
+/*!40000 ALTER TABLE `leadState` DISABLE KEYS */;
+INSERT INTO `leadState` VALUES (1,'image'),(2,'audio');
+/*!40000 ALTER TABLE `leadState` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `leadStepComment`
+--
+
+DROP TABLE IF EXISTS `leadStepComment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `leadStepComment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `leadId` int(11) NOT NULL DEFAULT '0',
+  `leadState` enum('image','story','audio') NOT NULL,
+  `userMail` varchar(100) NOT NULL,
+  `postDate` date DEFAULT NULL,
+  `comment` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `leadId` (`leadId`),
+  KEY `userMail` (`userMail`),
+  CONSTRAINT `leadIdForeign_1` FOREIGN KEY (`leadId`) REFERENCES `lead` (`id`),
+  CONSTRAINT `userMailForeign_1` FOREIGN KEY (`userMail`) REFERENCES `user` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `leadStepComment`
+--
+
+LOCK TABLES `leadStepComment` WRITE;
+/*!40000 ALTER TABLE `leadStepComment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `leadStepComment` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -215,4 +273,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-04-14 16:40:36
+-- Dump completed on 2013-04-18 11:20:13

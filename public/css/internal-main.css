@@ -58,6 +58,13 @@
 	font-size: 14px;
 }
 
+/* Lead story */
+#story #story-story {
+	height: 170px;
+	resize: none;
+	width: 100%;
+}
+
 /*Lead audio*/
 
 #audio #audio-lead-story {

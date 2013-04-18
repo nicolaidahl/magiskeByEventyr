@@ -33,6 +33,8 @@ object InternalFairyTale extends Controller with Secured {
         "name" -> text,
         "soundFile" -> optional[String](text),
         "imageFile" -> optional[String](text),
+        "story" -> optional[String](text),
+        "anchoring" -> optional[String](text),
         "priority" -> number
     )(Lead.apply)(Lead.unapply)
   )
@@ -123,4 +125,36 @@ object InternalFairyTale extends Controller with Secured {
   	  	Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
 	}	  
   }
+  
+  def updateLeadWithImage = Action(parse.multipartFormData) { implicit request =>
+    val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
+    val story = request.body.asFormUrlEncoded.get("anchoring").get(0)
+    
+    lead.anchoring = Some(story)
+    
+    Lead.update(lead)
+    
+    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+  } 
+  
+  def updateLeadWithStory = Action(parse.multipartFormData) { implicit request =>
+    val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
+    val story = request.body.asFormUrlEncoded.get("story").get(0)
+    
+    lead.story = Some(story)
+    
+    Lead.update(lead)
+    
+    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+  }
+  
+  
 }
+
+
+
+
+
+
+
+

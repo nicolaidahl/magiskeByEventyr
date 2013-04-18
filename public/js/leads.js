@@ -12,6 +12,7 @@ $(function(){
 				//Picture tab
 				
 				//Story tab
+				$('#story-lead-id').val(lead.id);
 				
 				//Audio tab
 				$('#audio-lead-id').val(lead.id);

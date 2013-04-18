@@ -9,16 +9,16 @@
 		<div class="span3">
 			<ul class="nav nav-list lead-list">
 				@if(FairyTale.getLeads(fairyTale.id.get).length == 0){
-					<li class="nav-header">Ingen ledetråde!</li>
+					<li class="nav-header">Ingen ledetr��de!</li>
 				} else {
-					<li class="nav-header">Ledetråde</li>
+					<li class="nav-header">Ledetr��de</li>
 					@for((lead, idx) <- FairyTale.getLeads(fairyTale.id.get).zipWithIndex){
 						<li model-id="@lead.id">@lead.name</li>
 					} 
 				}
 			</ul>
 			<div class="nav-footer">
-				<a href="#leadModal" role="button" class="btn-small btn-primary pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret ledetråd</a>
+				<a href="#leadModal" role="button" class="btn-small btn-primary pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret ledetr��d</a>
 			</div>
 			<div id="leadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			  <div class="modal-header">
@@ -54,7 +54,11 @@
 	  <div class="tab-pane" id="story">
 	  	<div class="span10 offset1">
 	  		<div class="hero-unit">
-	  			<p>TODO: Historie-funktionalitet</p>
+	  			@helper.form(action = routes.InternalFairyTale.updateLeadWithStory, 'enctype -> "multipart/form-data") {
+	  				<textarea name="story" id="story-story" rows="10" cols="1500"></textarea>
+	  				<input type="hidden" name="id" id="story-lead-id" value="">
+					<input type="submit" class="btn btn-primary pull-right" value="Gem" />
+				}
 	  		</div>
   		</div>
 	  </div>

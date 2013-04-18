@@ -17,6 +17,7 @@ dist
 /.idea_modules
 /.classpath
 /.project
+/.metadata
 /RUNNING_PID
 /.settings
 *.class

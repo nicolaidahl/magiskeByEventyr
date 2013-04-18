@@ -107,18 +107,18 @@ DROP TABLE IF EXISTS `lead`;
 CREATE TABLE `lead` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `fairyTaleId` int(11) DEFAULT NULL,
-  `name` varchar(40) DEFAULT NULL,
+  `name` varchar(40) NOT NULL,
   `soundFile` varchar(50) DEFAULT NULL,
   `imageFile` varchar(50) DEFAULT NULL,
   `priority` int(11) DEFAULT NULL,
-  `story` varchar(256) DEFAULT NULL,
-  `anchoring` varchar(60) DEFAULT NULL,
+  `story` text,
+  `anchoring` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `soundFile` (`soundFile`),
   UNIQUE KEY `imageFile` (`imageFile`),
   KEY `fairyTaleId` (`fairyTaleId`),
   CONSTRAINT `lead_ibfk_1` FOREIGN KEY (`fairyTaleId`) REFERENCES `fairy_tale` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +127,7 @@ CREATE TABLE `lead` (
 
 LOCK TABLES `lead` WRITE;
 /*!40000 ALTER TABLE `lead` DISABLE KEYS */;
-INSERT INTO `lead` VALUES (22,4,'Første ledetråd','2013-04-14T17:39:47.600+02:00','2013-04-14T17:39:47.587+02:00.jpg',0,'',''),(23,4,'Anden','2013-04-18T11:04:26.201+02:00','2013-04-14T17:42:08.417+02:00.jpg',0,'hej','');
+INSERT INTO `lead` VALUES (4,4,'First',NULL,'2013-04-18T14:03:47.450+02:00.JPG',0,NULL,NULL);
 /*!40000 ALTER TABLE `lead` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -273,4 +273,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-04-18 11:25:36
+-- Dump completed on 2013-04-18 14:10:04

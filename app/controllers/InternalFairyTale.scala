@@ -69,6 +69,13 @@ object InternalFairyTale extends Controller with Secured {
   
   def leadImagesPath(fairytaleId: Int) = "./public/img/fairytales/" + fairytaleId + "/leads/"
   
+  def deleteImageFromDisk(fileName: String, fairytaleId: Int) = {
+    import java.io.File
+    
+    val fileToDelete = new File(leadImagesPath(fairytaleId) + fileName)
+    fileToDelete.delete()
+  }
+  
   def saveImageToDisk(pic: FilePart[TemporaryFile], fairytaleId: Int) = {
     import java.io.File
       	 
@@ -159,6 +166,7 @@ object InternalFairyTale extends Controller with Secured {
             doTheUpdateWithImagePath(None)
             Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
           case Some(pic) =>
+            deleteImageFromDisk(existingImageFile, lead.fairyTaleId)
             val imagePath = saveImageToDisk(pic, lead.fairyTaleId)
           
             doTheUpdateWithImagePath(Some(imagePath))

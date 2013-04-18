@@ -147,16 +147,17 @@ object InternalFairyTale extends Controller with Secured {
   def updateLeadWithImage = Action(parse.multipartFormData) { implicit request =>
     val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
     
-    val imageOpt = request.body.file("image_file")
-    
     def doTheUpdateWithImagePath(path: Option[String]) = {
       val anchoring = request.body.asFormUrlEncoded.get("anchoring").get(0)
 		    
 	  lead.anchoring = Some(anchoring)
 	  if(path.isDefined)
-		  lead.imageFile 
+		  lead.imageFile = path
 	  Lead.update(lead)
     }
+    
+    
+    val imageOpt = request.body.file("image_file")
     
     lead.imageFile match {
       case None => BadRequest("No file exists on lead.") 
@@ -170,7 +171,7 @@ object InternalFairyTale extends Controller with Secured {
             val imagePath = saveImageToDisk(pic, lead.fairyTaleId)
           
             doTheUpdateWithImagePath(Some(imagePath))
-            Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+            Ok("Vi er i some")
       }
     }
   } 

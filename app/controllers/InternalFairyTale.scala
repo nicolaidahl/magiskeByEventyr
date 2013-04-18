@@ -171,7 +171,7 @@ object InternalFairyTale extends Controller with Secured {
             val imagePath = saveImageToDisk(pic, lead.fairyTaleId)
           
             doTheUpdateWithImagePath(Some(imagePath))
-            Ok("Vi er i some")
+            Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
       }
     }
   } 

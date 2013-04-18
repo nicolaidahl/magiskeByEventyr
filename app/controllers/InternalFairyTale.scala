@@ -13,6 +13,8 @@ import org.joda.time.DateTime
 import play.api.libs.json
 import play.api.libs.MimeTypes
 import play.data.DynamicForm
+import play.api.libs.Files.TemporaryFile
+import play.api.mvc.MultipartFormData.FilePart
 
 object InternalFairyTale extends Controller with Secured {
   
@@ -65,6 +67,25 @@ object InternalFairyTale extends Controller with Secured {
     }.getOrElse(Forbidden)
   }
   
+  def leadImagesPath(fairytaleId: Int) = "./public/img/fairytales/" + fairytaleId + "/leads/"
+  
+  def saveImageToDisk(pic: FilePart[TemporaryFile], fairytaleId: Int) = {
+    import java.io.File
+      	 
+  	val fileExtension = pic.filename.split('.').takeRight(1).headOption match {
+  	  case None => ""
+  	  case Some (head) => "." + head
+  	}
+  	val now = DateTime.now()
+  	val fileName = now.toString() + fileExtension
+  	
+  	
+  	val file = leadImagesPath(fairytaleId) + fileName
+  	pic.ref.moveTo(new File(file))
+  	
+  	fileName
+  }
+  
   def newLead = Action(parse.multipartFormData) { implicit request =>
   	val form = leadForm.bindFromRequest();
   	val lead = form.get
@@ -74,20 +95,9 @@ object InternalFairyTale extends Controller with Secured {
   	  case None => BadRequest("No file uploaded.") 
   	  case Some (pic) =>	      
   	    
-  	    import java.io.File
-      	 
-  	  	val fileExtension = pic.filename.split('.').takeRight(1).headOption match {
-  	  	  case None => ""
-  	  	  case Some (head) => "." + head
-  	  	}
-  	  	val now = DateTime.now()
-  	  	val fileName = now.toString() + fileExtension
-  	  	
-  	  	//TODO: change path to include lead id
-  	  	val file = "./public/img/fairytales/" + lead.fairyTaleId + "/leads/" + fileName
-  	  	pic.ref.moveTo(new File(file))
+  	    val fileIdent = saveImageToDisk(pic, lead.fairyTaleId)
 
-  	  	lead.imageFile = Some(fileName)	
+  	  	lead.imageFile = Some(fileIdent)	
   	  	//Create lead
   	  	val created = Lead.create(lead)
 	    Redirect(routes.InternalFairyTale.fairyTale(created.fairyTaleId))
@@ -129,13 +139,32 @@ object InternalFairyTale extends Controller with Secured {
   
   def updateLeadWithImage = Action(parse.multipartFormData) { implicit request =>
     val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
-    val anchoring = request.body.asFormUrlEncoded.get("anchoring").get(0)
     
-    lead.anchoring = Some(anchoring)
+    val imageOpt = request.body.file("image_file")
     
-    Lead.update(lead)
+    def doTheUpdateWithImagePath(path: Option[String]) = {
+      val anchoring = request.body.asFormUrlEncoded.get("anchoring").get(0)
+		    
+	  lead.anchoring = Some(anchoring)
+	  if(path.isDefined)
+		  lead.imageFile 
+	  Lead.update(lead)
+    }
     
-    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+    lead.imageFile match {
+      case None => BadRequest("No file exists on lead.") 
+      case Some(existingImageFile) =>
+        imageOpt match {
+          case None =>
+            doTheUpdateWithImagePath(None)
+            Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+          case Some(pic) =>
+            val imagePath = saveImageToDisk(pic, lead.fairyTaleId)
+          
+            doTheUpdateWithImagePath(Some(imagePath))
+            Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+      }
+    }
   } 
   
   def updateLeadWithStory = Action(parse.multipartFormData) { implicit request =>

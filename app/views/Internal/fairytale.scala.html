@@ -59,7 +59,8 @@
 	  				<div class="span8">
 	  					@helper.form(action = routes.InternalFairyTale.updateLeadWithImage, 'enctype -> "multipart/form-data") {
 	  						<textarea name="anchoring" id="image-anchoring" rows="10" cols="1500"></textarea>
-	  						<input type="hidden" name="id" id="story-image-id" value="">
+	  						<input type="file" name="image_file">
+	  						<input type="hidden" name="id" id="image-lead-id" value="">
 							<input type="submit" class="btn btn-primary pull-right" value="Gem" />
 						}
 	  				</div>

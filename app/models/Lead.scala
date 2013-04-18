@@ -6,6 +6,7 @@ import anorm._
 import anorm.SqlParser._
 import org.joda.time.DateTime
 import play.api.libs.json.Json
+import play.api.Logger
 
 case class Lead(id: Option[Int], 
 				fairyTaleId: Int, 
@@ -26,13 +27,13 @@ object Lead {
     get[Int]("lead.id") ~
     get[Int]("lead.fairyTaleId") ~
     get[String]("lead.name") ~
-    get[String]("lead.soundFile") ~
-    get[String]("lead.imageFile") ~ 
-    get[String]("lead.story") ~
-    get[String]("lead.anchoring") ~
+    get[Option[String]]("lead.soundFile") ~
+    get[Option[String]]("lead.imageFile") ~ 
+    get[Option[String]]("lead.story") ~
+    get[Option[String]]("lead.anchoring") ~
     get[Int]("lead.priority") map {
       case id~fairyTaleId~name~soundFile~imageFile~story~anchoring~priority => 
-        Lead(Some(id), fairyTaleId, name, Some(""), Some(imageFile), Some(story), Some(anchoring), priority)
+        Lead(Some(id), fairyTaleId, name, soundFile, imageFile, story, anchoring, priority)
     }
   }
 
@@ -79,9 +80,9 @@ object Lead {
    */
   def create(lead: Lead): Lead = {
     DB.withConnection { implicit connection =>
-      SQL(
+      val foo = SQL(
         """
-          insert into lead (fairyTaleId, name, soundFile, imageFile, story, priority) values (
+          insert into lead (fairyTaleId, name, soundFile, imageFile, story, anchoring, priority) values (
     		  {fairyTaleId}, {name}, {soundFile}, {imageFile}, {story}, {anchoring}, {priority}
           )
         """
@@ -90,10 +91,10 @@ object Lead {
         'name -> lead.name,
         'soundFile -> lead.soundFile,
         'imageFile -> lead.imageFile,
-        'story -> lead.story.getOrElse(""),
-        'anchoring -> lead.anchoring.getOrElse(""),
+        'story -> lead.story,
+        'anchoring -> lead.anchoring,
         'priority -> lead.priority
-      ).executeUpdate()
+      ).executeUpdate
       
       lead
       

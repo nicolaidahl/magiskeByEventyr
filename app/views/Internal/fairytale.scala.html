@@ -76,12 +76,12 @@
 	  					@helper.form(action = routes.InternalFairyTale.updateLeadWithImage, 'enctype -> "multipart/form-data") {
 	  						<textarea name="anchoring" id="image-anchoring" rows="10" cols="1500"></textarea>
 	  						<input type="file" name="image_file">
-	  						<input type="hidden" name="id" id="lead-id" value="">
+	  						<input type="hidden" name="id" class="lead-id" value="">
 							<input type="submit" class="btn btn-primary pull-right" value="Gem" />
 						}
 	  				</div>
 	  				<div class="span4">
-	  					<img id="lead-image" alt="Picture placeholder" src="">
+	  					<img class="lead-image" alt="Picture placeholder" src="">
 	  				</div>
 	  			</div>
 		  	</div>
@@ -92,8 +92,8 @@
 	  	<div class="span10 offset1">
 	  		<div class="hero-unit">
 	  			@helper.form(action = routes.InternalFairyTale.updateLeadWithStory, 'enctype -> "multipart/form-data") {
-	  				<textarea name="story" id="lead-story" rows="10" cols="1500"></textarea>
-	  				<input type="hidden" name="id" id="lead-id" value="">
+	  				<textarea name="story" class="lead-story" rows="10" cols="1500"></textarea>
+	  				<input type="hidden" name="id" class="lead-id" value="">
 					<input type="submit" class="btn btn-primary pull-right" value="Gem" />
 				}
 	  		</div>
@@ -112,10 +112,10 @@
 	  			</div>
 	  			<div class="row-fluid">
 	  				<div class="span8">
-	  					<textarea id="lead-story" rows="10" cols="1500" readonly></textarea>
+	  					<textarea class="lead-story" rows="10" cols="1500" readonly></textarea>
 	  				</div>
 	  				<div class="span4">
-	  					<img id="lead-image" alt="Picture placeholder" src="">
+	  					<img class="lead-image" alt="Picture placeholder" src="">
 	  				</div>
 	  			</div>
 	  			<div class="row-fluid">
@@ -129,14 +129,14 @@
 	  			<div class="row-fluid">
 	  				<div class="span4">
 	  					@helper.form(action = routes.InternalFairyTale.uploadAudio, 'enctype -> "multipart/form-data") {
-	  						<input type="hidden" name="id" id="lead-id" value="">
+	  						<input type="hidden" name="id" class="lead-id" value="">
 							<input type="file" name="leadAudio">
 							<input type="submit" class="btn btn-primary pull-right" value="Gem" />
 	  					}
 	  				</div>
 	  				<div class="span8">
 	  					<audio id="main-player" controls>
-						  <source id="audio-lead-audio" src="" type="audio/mpeg">
+						  <source class="lead-audio" src="" type="audio/mpeg">
 						  Your browser does not support the audio element.
 						</audio>
 	  				</div>

@@ -58,6 +58,14 @@
 	font-size: 14px;
 }
 
+/* Lead image */
+#images #image-anchoring {
+	height: 170px;
+	resize: none;
+	width: 100%;
+}
+
+
 /* Lead story */
 #story #story-story {
 	height: 170px;

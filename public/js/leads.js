@@ -9,7 +9,10 @@ $(function(){
 				//Update fields and elements on the page to reflect the selection
 				//Name header
 				$('#lead-name').text("Lead: " + lead.name);
-				//Picture tab
+				
+				//Image tab
+				$('#image-lead-id').val(lead.id);
+				$('#image-lead-image').attr('src', lead.imageFile);
 				
 				//Story tab
 				$('#story-lead-id').val(lead.id);

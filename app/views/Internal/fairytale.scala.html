@@ -47,8 +47,28 @@
 	  <div class="tab-pane active" id="images">
 	  	<div class="span10 offset1">
 		  	<div class="hero-unit">
-		  		<p>TODO: Billed-funktionalitet</p>
+		  		<div class="row-fluid">
+	  				<div class="span8">
+	  					<label>Fysisk forankring:</label>
+	  				</div>
+	  				<div class="span4">
+	  					<label>Billede:</label>
+	  				</div>
+	  			</div>
+	  			<div class="row-fluid">
+	  				<div class="span8">
+	  					@helper.form(action = routes.InternalFairyTale.updateLeadWithImage, 'enctype -> "multipart/form-data") {
+	  						<textarea name="anchoring" id="image-anchoring" rows="10" cols="1500"></textarea>
+	  						<input type="hidden" name="id" id="story-image-id" value="">
+							<input type="submit" class="btn btn-primary pull-right" value="Gem" />
+						}
+	  				</div>
+	  				<div class="span4">
+	  					<img id="image-lead-image" alt="Picture placeholder" src="">
+	  				</div>
+	  			</div>
 		  	</div>
+		  	
 	  	</div>
 	  </div>
 	  <div class="tab-pane" id="story">

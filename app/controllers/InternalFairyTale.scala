@@ -129,9 +129,9 @@ object InternalFairyTale extends Controller with Secured {
   
   def updateLeadWithImage = Action(parse.multipartFormData) { implicit request =>
     val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
-    val story = request.body.asFormUrlEncoded.get("anchoring").get(0)
+    val anchoring = request.body.asFormUrlEncoded.get("anchoring").get(0)
     
-    lead.anchoring = Some(story)
+    lead.anchoring = Some(anchoring)
     
     Lead.update(lead)
     

@@ -2,6 +2,9 @@ package models
 
 import play.api.db._
 import play.api.Play.current
+import play.api.data._
+import play.api.data.Forms._
+import play.api.data.validation.Constraints._
 
 import anorm._
 import anorm.SqlParser._
@@ -29,6 +32,18 @@ object FairyTale {
       case id~customerId~name~dueDate~briefing => FairyTale(Some(id), customerId, name, DateTime.parse(dueDate.toString()), briefing)
     }
   }
+  
+  val form = Form(
+    mapping(
+        "id" -> optional[Int](number),
+        "customerId" -> number,
+        "name" -> text,
+        "dueDate" -> jodaDate("yyyy-MM-dd"),
+        "briefing" -> text
+    )(FairyTale.apply)(FairyTale.unapply)
+  )
+	
+  
   
   // -- Queries
   

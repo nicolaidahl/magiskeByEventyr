@@ -1,0 +1,93 @@
+package controllers
+
+import play.api._
+import play.api.mvc._
+import play.api.data._
+import play.api.data.Forms._
+import play.api.data.validation.Constraints._
+import models.Lead
+import org.joda.time.DateTime
+import play.api.mvc.MultipartFormData.FilePart
+import play.api.libs.Files.TemporaryFile
+import toolbox.IOHelper
+
+object InternalLead extends Controller {
+  
+  def newLead = Action(parse.multipartFormData) { implicit request =>
+  	val form = Lead.form.bindFromRequest();
+  	val lead = form.get
+  	val picOpt = request.body.file("leadImage")
+  	
+  	lead.imageFile = if (picOpt.isDefined) Some(IOHelper.saveToFairyTale(lead.fairyTaleId, picOpt.get, IOHelper.FileType.Image)) else None
+  
+  	Lead.create(lead)
+    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+  }
+  
+  def getLead (id: Int) = Action { implicit request =>
+    Lead.findById(id) match {
+      case None => BadRequest("Error")
+      case Some (lead) => Ok(Lead.json(lead))
+    }
+  }
+  
+  def updateLeadWithAudio = Action(parse.multipartFormData) { implicit request =>
+    val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
+  	val soundOpt = request.body.file("leadAudio")
+  
+  	soundOpt match {
+  	  case None => BadRequest("No file uploaded.") 
+  	  case Some (audio) =>
+  	    if (lead.soundFile.isDefined) IOHelper.deleteFromFairyTale(lead.fairyTaleId, lead.soundFile.get, IOHelper.FileType.Audio)
+  	    
+  	    lead.soundFile = Some(IOHelper.saveToFairyTale(lead.fairyTaleId, audio, IOHelper.FileType.Audio))
+        Lead.update(lead)
+  	  	
+  	  	Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+	}	  
+  }
+  
+  def updateLeadWithImage = Action(parse.multipartFormData) { implicit request =>
+    val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
+    
+    def doTheUpdateWithImagePath(path: Option[String]) = {
+      val anchoring = request.body.asFormUrlEncoded.get("anchoring").get(0)
+		    
+	  lead.anchoring = Some(anchoring)
+	  if(path.isDefined)
+		  lead.imageFile = path
+	  Lead.update(lead)
+    }
+    
+    
+    val imageOpt = request.body.file("image_file")
+    
+    imageOpt match {
+          case None =>
+            doTheUpdateWithImagePath(None)
+          case Some(image) =>
+            if (lead.imageFile.isDefined) IOHelper.deleteFromFairyTale(lead.fairyTaleId, lead.imageFile.get, IOHelper.FileType.Image)
+            
+            val imagePath = IOHelper.saveToFairyTale(lead.fairyTaleId, image, IOHelper.FileType.Image)
+            
+            doTheUpdateWithImagePath(Some(imagePath))
+    }
+    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+  } 
+  
+  def updateLeadWithStory = Action(parse.multipartFormData) { implicit request =>
+    val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
+    val story = request.body.asFormUrlEncoded.get("story").get(0)
+    
+    lead.story = Some(story)
+    
+    Lead.update(lead)
+    
+    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+  }
+  
+  def disapproveLead = Action(parse.multipartFormData) { implicit request =>
+    Ok("TODO: Implement")
+  }
+
+}

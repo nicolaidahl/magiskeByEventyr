@@ -2,6 +2,9 @@
 @Layout.internal_main("Magiske Byeventyr! - Intern brug") {
 	<script type="text/javascript" src="@routes.Internal.javascriptRoutes"></script>
 	<script type="text/javascript" src="@routes.Assets.at("js/leads.js")"></script>
+	@if(userType == "admin"){
+		<script type="text/javascript" src="@routes.Assets.at("js/admin.js")"></script>
+	}
 	<div class="row-fluid" style="margin-bottom: 20px;">
 		<div class="span7 offset1">
 			<div id="map_canvas"></div>
@@ -44,105 +47,113 @@
 	<div class="row-fluid">
 		<div class="span10 offset1">
 			<h1 id="lead-name"></h1>
-			@if(userType == "admin"){
-				<button type="button" class="btn-small btn-primary pull-right" id="admin-approve-mode">Godkendelses-mode</button>
-			}
 		</div>
 	</div>
-	
-	<div class="row-fluid">
-		<div class="span10 offset1">
-			<ul class="nav nav-tabs" id="fairyTaleTab">
-		  		<li class="active"><a data-toggle="tab" href="#images">Billede</a></li>
-		  		<li><a data-toggle="tab" href="#story">Historie</a></li>
-		  		<li><a data-toggle="tab" href="#audio">Lyd</a></li>
-			</ul>
+	@if(userType == "admin"){
+		<div class="row-fluid">
+			<div class="span10 offset1">
+				<button type="button" class="btn-small btn-success" id="admin-approve-mode-toggle">Skift til godkendelses mode</button>
+			</div>
 		</div>
-	</div>
-	<div class="tab-content">
-	  <div class="tab-pane active" id="images">
-	  	<div class="span10 offset1">
-		  	<div class="hero-unit">
-		  		<div class="row-fluid">
-	  				<div class="span8">
-	  					<label>Fysisk forankring:</label>
-	  				</div>
-	  				<div class="span4">
-	  					<label>Billede:</label>
-	  				</div>
-	  			</div>
-	  			<div class="row-fluid">
-	  				<div class="span8">
-	  					@helper.form(action = routes.InternalFairyTale.updateLeadWithImage, 'enctype -> "multipart/form-data") {
-	  						<textarea name="anchoring" id="image-anchoring" rows="10" cols="1500"></textarea>
-	  						<input type="file" name="image_file">
-	  						<input type="hidden" name="id" class="lead-id" value="">
-							<input type="submit" class="btn btn-primary pull-right" value="Gem" />
-						}
-	  				</div>
-	  				<div class="span4">
-	  					<img class="lead-image" alt="Picture placeholder" src="">
-	  				</div>
-	  			</div>
+		<div id="approve" style="display:none;">
+			@views.html.Internal.templates.lead_approve()
+		</div>
+	}
+	<div id="create">
+		<div class="row-fluid">
+			<div class="span10 offset1">
+				<ul class="nav nav-tabs" id="fairyTaleTab">
+			  		<li class="active"><a data-toggle="tab" href="#images">Billede</a></li>
+			  		<li><a data-toggle="tab" href="#story">Historie</a></li>
+			  		<li><a data-toggle="tab" href="#audio">Lyd</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="tab-content">
+		  <div class="tab-pane active" id="images">
+		  	<div class="span10 offset1">
+			  	<div class="hero-unit">
+			  		<div class="row-fluid">
+		  				<div class="span8">
+		  					<label>Fysisk forankring:</label>
+		  				</div>
+		  				<div class="span4">
+		  					<label>Billede:</label>
+		  				</div>
+		  			</div>
+		  			<div class="row-fluid">
+		  				<div class="span8">
+		  					@helper.form(action = routes.InternalLead.updateLeadWithImage, 'enctype -> "multipart/form-data") {
+		  						<textarea name="anchoring" id="image-anchoring" rows="10" cols="1500"></textarea>
+		  						<input type="file" name="image_file">
+		  						<input type="hidden" name="id" class="lead-id" value="">
+								<input type="submit" class="btn btn-primary pull-right" value="Gem" />
+							}
+		  				</div>
+		  				<div class="span4">
+		  					<img class="lead-image" alt="Picture placeholder" src="">
+		  				</div>
+		  			</div>
+			  	</div>
+			  	
 		  	</div>
-		  	
-	  	</div>
-	  </div>
-	  <div class="tab-pane" id="story">
-	  	<div class="span10 offset1">
-	  		<div class="hero-unit">
-	  			@helper.form(action = routes.InternalFairyTale.updateLeadWithStory, 'enctype -> "multipart/form-data") {
-	  				<textarea name="story" class="lead-story" rows="10" cols="1500"></textarea>
-	  				<input type="hidden" name="id" class="lead-id" value="">
-					<input type="submit" class="btn btn-primary pull-right" value="Gem" />
-				}
+		  </div>
+		  <div class="tab-pane" id="story">
+		  	<div class="span10 offset1">
+		  		<div class="hero-unit">
+		  			@helper.form(action = routes.InternalLead.updateLeadWithStory, 'enctype -> "multipart/form-data") {
+		  				<textarea name="story" class="lead-story" rows="10" cols="1500"></textarea>
+		  				<input type="hidden" name="id" class="lead-id" value="">
+						<input type="submit" class="btn btn-primary pull-right" value="Gem" />
+					}
+		  		</div>
 	  		</div>
-  		</div>
-	  </div>
-	  <div class="tab-pane" id="audio">
-	  	<div class="span10 offset1">
-	  		<div class="hero-unit">
-	  			<div class="row-fluid">
-	  				<div class="span8">
-	  					<label>Historie:</label>
-	  				</div>
-	  				<div class="span4">
-	  					<label>Billede:</label>
-	  				</div>
-	  			</div>
-	  			<div class="row-fluid">
-	  				<div class="span8">
-	  					<textarea class="lead-story" rows="10" cols="1500" readonly></textarea>
-	  				</div>
-	  				<div class="span4">
-	  					<img class="lead-image" alt="Picture placeholder" src="">
-	  				</div>
-	  			</div>
-	  			<div class="row-fluid">
-	  				<div class="span4">
-	  					<label>Upload lydfil:</label>
-	  				</div>
-	  				<div class="span8">
-	  					<label>Lyt:</label>
-	  				</div>
-	  			</div>
-	  			<div class="row-fluid">
-	  				<div class="span4">
-	  					@helper.form(action = routes.InternalFairyTale.uploadAudio, 'enctype -> "multipart/form-data") {
-	  						<input type="hidden" name="id" class="lead-id" value="">
-							<input type="file" name="leadAudio">
-							<input type="submit" class="btn btn-primary pull-right" value="Gem" />
-	  					}
-	  				</div>
-	  				<div class="span8">
-	  					<audio id="main-player" controls>
-						  <source class="lead-audio" src="" type="audio/mpeg">
-						  Your browser does not support the audio element.
-						</audio>
-	  				</div>
-	  			</div>
+		  </div>
+		  <div class="tab-pane" id="audio">
+		  	<div class="span10 offset1">
+		  		<div class="hero-unit">
+		  			<div class="row-fluid">
+		  				<div class="span8">
+		  					<label>Historie:</label>
+		  				</div>
+		  				<div class="span4">
+		  					<label>Billede:</label>
+		  				</div>
+		  			</div>
+		  			<div class="row-fluid">
+		  				<div class="span8">
+		  					<textarea class="lead-story" rows="10" cols="1500" readonly></textarea>
+		  				</div>
+		  				<div class="span4">
+		  					<img class="lead-image" alt="Picture placeholder" src="">
+		  				</div>
+		  			</div>
+		  			<div class="row-fluid">
+		  				<div class="span4">
+		  					<label>Upload lydfil:</label>
+		  				</div>
+		  				<div class="span8">
+		  					<label>Lyt:</label>
+		  				</div>
+		  			</div>
+		  			<div class="row-fluid">
+		  				<div class="span4">
+		  					@helper.form(action = routes.InternalLead.updateLeadWithAudio, 'enctype -> "multipart/form-data") {
+		  						<input type="hidden" name="id" class="lead-id" value="">
+								<input type="file" name="leadAudio">
+								<input type="submit" class="btn btn-primary pull-right" value="Gem" />
+		  					}
+		  				</div>
+		  				<div class="span8">
+		  					<audio class="lead-player" controls>
+							  <source class="lead-audio" src="" type="audio/mpeg">
+							  Your browser does not support the audio element.
+							</audio>
+		  				</div>
+		  			</div>
+		  		</div>
 	  		</div>
-  		</div>
+		  </div>
 	  </div>
 	</div>
 } {

@@ -1,6 +1,5 @@
 .DS_Store
-/public/img/fairytales
-/public/audio
+/public/fairytales
 .target
 logs
 /bin

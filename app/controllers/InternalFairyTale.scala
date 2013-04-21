@@ -24,7 +24,7 @@ object InternalFairyTale extends Controller with Secured {
     }.getOrElse(Forbidden)
   }
   
-  def saveFairyTale (customerId: Int) = Action { implicit request =>
+  def saveFairyTale (customerId: Int) = IsAuthenticated { _ => implicit request =>
   	FairyTale.form.bindFromRequest.fold(
 	  errors => BadRequest(views.html.Internal.fairytales(customerId, FairyTale.findAllByCustomer(customerId), errors)),
 	  fairyTale => {

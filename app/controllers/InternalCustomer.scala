@@ -25,7 +25,7 @@ object InternalCustomer extends Controller with Secured {
 	    }.getOrElse(Forbidden)
   }
 	
-  def saveCustomer = Action { implicit request =>
+  def saveCustomer = IsAuthenticated { _ => implicit request =>
   	customerForm.bindFromRequest.fold(
 		errors => BadRequest(views.html.Internal.customers(Customer.findAll, errors)),
   			customer => {

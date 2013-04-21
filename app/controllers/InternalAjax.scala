@@ -7,7 +7,7 @@ import play.api.mvc.Controller
 
 object InternalAjax extends Controller with Secured {
   
-  def saveLeadImage = Action(parse.temporaryFile) { request =>
+  def saveLeadImage = IsAuthenticated(parse.temporaryFile) { _ => request =>
     request.body.moveTo(new File("/tmp/picture"))
     Ok("File uploaded")
   }

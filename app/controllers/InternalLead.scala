@@ -11,9 +11,9 @@ import play.api.mvc.MultipartFormData.FilePart
 import play.api.libs.Files.TemporaryFile
 import toolbox.IOHelper
 
-object InternalLead extends Controller {
+object InternalLead extends Controller with Secured {
   
-  def newLead = Action(parse.multipartFormData) { implicit request =>
+  def newLead = IsAuthenticated(BodyParsers.parse.multipartFormData) { _ => implicit request =>
   	val form = Lead.form.bindFromRequest();
   	val lead = form.get
   	val picOpt = request.body.file("leadImage")
@@ -24,14 +24,14 @@ object InternalLead extends Controller {
     Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
   }
   
-  def getLead (id: Int) = Action { implicit request =>
+  def getLead (id: Int) = IsAuthenticated { _ => implicit request =>
     Lead.findById(id) match {
       case None => BadRequest("Error")
       case Some (lead) => Ok(Lead.json(lead))
     }
   }
   
-  def updateLeadWithAudio = Action(parse.multipartFormData) { implicit request =>
+  def updateLeadWithAudio = IsAuthenticated(parse.multipartFormData) { _ => implicit request =>
     val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
   	val soundOpt = request.body.file("leadAudio")
   
@@ -47,7 +47,7 @@ object InternalLead extends Controller {
 	}	  
   }
   
-  def updateLeadWithImage = Action(parse.multipartFormData) { implicit request =>
+  def updateLeadWithImage = IsAuthenticated(parse.multipartFormData) { _ => implicit request =>
     val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
     
     def doTheUpdateWithImagePath(path: Option[String]) = {
@@ -75,7 +75,7 @@ object InternalLead extends Controller {
     Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
   } 
   
-  def updateLeadWithStory = Action(parse.multipartFormData) { implicit request =>
+  def updateLeadWithStory = IsAuthenticated(parse.multipartFormData) { _ => implicit request =>
     val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
     val story = request.body.asFormUrlEncoded.get("story").get(0)
     

@@ -15,6 +15,9 @@ import models.Lead
 import org.joda.time.DateTime
 import java.security.MessageDigest
 
+import play.api.libs.Files.TemporaryFile
+
+
 object Internal extends Controller with Secured {
 	
   val loginForm = Form(
@@ -79,10 +82,19 @@ trait Secured {
   /** 
    * Action for authenticated users.
    */
-  def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
+  def IsAuthenticated(f: => String => Request[AnyContent] => Result) = 
+    Security.Authenticated(username, onUnauthorized) { user =>
     Action(request => f(user)(request))
   }
 
+  /** 
+   * Action for authenticated users.
+   */
+  def IsAuthenticated[A](parser: BodyParser[A])(f: => String => Request[A] => Result) = 
+    Security.Authenticated(username, onUnauthorized) { user =>
+    Action[A](parser)(request => f(user)(request))
+  }
+  
   /**
    * Check if the connected user is a member of this project.
    * TODO: May be relevant to see if "creators" may edit for a certain customer

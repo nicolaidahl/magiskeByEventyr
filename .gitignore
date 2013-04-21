@@ -21,6 +21,7 @@ dist
 /.settings
 *.class
 *.log
+public/img/*
 
 # sbt specific
 dist/*

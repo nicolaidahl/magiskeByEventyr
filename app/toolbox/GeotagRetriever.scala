@@ -1,7 +1,6 @@
 package toolbox
 
 import javaxt.io.Image
-import org.openqa.selenium.internal.seleniumemulation.GetCookieByName
 import com.drew.imaging.ImageMetadataReader
 import com.drew.metadata.exif.GpsDirectory
 
@@ -20,7 +19,6 @@ object GeotagRetriever {
       Some(location)
   
   }
-  
 }
 
 
@@ -30,9 +28,4 @@ object Test extends App {
   val file = new java.io.File("/IMG_1140.jpg")
   
   print(getCoordinates(file))
-  
-  
-  
-  //val coord = getCoordinates(file)
-  //print(coord)
 }

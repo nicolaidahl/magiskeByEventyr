@@ -7,6 +7,10 @@ import anorm.SqlParser._
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.Logger
+import play.api.data._
+import play.api.data.Forms._
+import play.api.data.validation.Constraints._
+import toolbox.IOHelper
 
 case class Lead(id: Option[Int], 
 				fairyTaleId: Int, 
@@ -36,6 +40,19 @@ object Lead {
         Lead(Some(id), fairyTaleId, name, soundFile, imageFile, story, anchoring, priority)
     }
   }
+  
+  val form = Form(
+    mapping(
+        "id" -> optional[Int](number),
+        "fairyTaleId" -> number,
+        "name" -> text,
+        "soundFile" -> optional[String](text),
+        "imageFile" -> optional[String](text),
+        "story" -> optional[String](text),
+        "anchoring" -> optional[String](text),
+        "priority" -> number
+    )(Lead.apply)(Lead.unapply)
+  )
 
   /**
    * Parse a JSon lead containing html-ready values (file paths) from a Lead
@@ -47,8 +64,10 @@ object Lead {
 	      "id" -> Json.toJson(lead.id),
 	      "fairyTaleId" -> Json.toJson(lead.fairyTaleId),
 	      "name" -> Json.toJson(lead.name),
-	      "soundFile" -> Json.toJson("/assets/audio/fairytales/" + lead.fairyTaleId + "/leads/" + lead.id.get + "/" + lead.soundFile.getOrElse("")),
-	      "imageFile" -> Json.toJson("/assets/img/fairytales/" + lead.fairyTaleId + "/leads/" + lead.imageFile.get) //TODO: Add lead id to path
+	      "imageFile" -> Json.toJson(if (lead.imageFile.isDefined) "/assets/fairytales/" + lead.fairyTaleId + "/img/" + lead.imageFile.get else ""),
+	      "anchoring" -> Json.toJson(lead.anchoring.getOrElse("")),
+	      "story" -> Json.toJson(lead.story.getOrElse("")),
+	      "soundFile" -> Json.toJson(if (lead.soundFile.isDefined) "/assets/fairytales/" + lead.fairyTaleId + "/audio/" + lead.soundFile.get else "")
       )
 	)
   }

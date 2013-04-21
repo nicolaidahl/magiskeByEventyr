@@ -8,7 +8,7 @@ $(function(){
 })
 
 function loadLead(id){
-	jsRoutes.controllers.InternalFairyTale.getLead(id).ajax({
+	jsRoutes.controllers.InternalLead.getLead(id).ajax({
 		success: function(lead) {
 			//Update fields and elements on the page to reflect the selection
 			//Common elements
@@ -17,14 +17,19 @@ function loadLead(id){
 			$('.lead-image').attr('src', lead.imageFile);
 			$('.lead-story').text(lead.story);
 			$('.lead-audio').attr('src', lead.soundFile);
-			$('.lead-audio').closest('audio')[0].pause();
-			$('.lead-audio').closest('audio')[0].load();
-			//Picture tab
-			
+			//TODO: Consider going with $('audio')[0].pause()/load() if no other audio tags are introduced then 
+			$('.lead-player').each(function(key, value){
+				$(value)[0].pause();
+				$(value)[0].load();
+			});
+			//Image tab
+			$('#image-anchoring').text(lead.anchoring)
 			//Story tab
 			
 			//Audio tab
 			
+			//Approve
+			adjustContentPos();
 		},
 		error: function(data) {
 			alert("An error occured: " + data);

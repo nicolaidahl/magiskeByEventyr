@@ -13,14 +13,14 @@ POST	/internal										controllers.InternalCustomer.saveCustomer
 GET		/internal/:customerId/fairytales				controllers.InternalFairyTale.fairyTales(customerId: Int)
 POST	/internal/:customerId/fairytales				controllers.InternalFairyTale.saveFairyTale(customerId: Int)
 GET		/internal/fairytales/:id						controllers.InternalFairyTale.fairyTale(id: Int)
-POST	/internal/fairytales/newLead					controllers.InternalFairyTale.newLead
-POST	/internal/fairytales/uploadAudio				controllers.InternalFairyTale.uploadAudio
-POST	/internal/leads/updateLeadWithStory				controllers.InternalFairyTale.updateLeadWithStory
-POST	/internal/leads/updateLeadWithImage				controllers.InternalFairyTale.updateLeadWithImage
-POST	/internal/leads/disapproveLead					controllers.InternalFairyTale.disapproveLead
+POST	/internal/leads/newLead							controllers.InternalLead.newLead
+POST	/internal/leads/getLead							controllers.InternalLead.getLead(id: Int)
+POST	/internal/leads/updateLeadWithAudio				controllers.InternalLead.updateLeadWithAudio
+POST	/internal/leads/updateLeadWithStory				controllers.InternalLead.updateLeadWithStory
+POST	/internal/leads/updateLeadWithImage				controllers.InternalLead.updateLeadWithImage
+POST	/internal/leads/disapproveLead					controllers.InternalLead.disapproveLead
 
-# Internal AJAX content
-POST	/internal/fairytales/getLead			controllers.InternalFairyTale.getLead(id: Int)
+
 
 # Authentication
 GET     /internal/login             controllers.Internal.login

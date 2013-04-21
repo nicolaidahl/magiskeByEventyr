@@ -58,11 +58,23 @@
 	font-size: 14px;
 }
 
+/*Admin approve mode*/
+#admin-approve-mode-toggle {
+	width: 100%;
+	margin-bottom: 10px;
+}
+
 /* Lead image */
 #images #image-anchoring {
 	height: 170px;
 	resize: none;
 	width: 100%;
+}
+
+.lead-image {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 

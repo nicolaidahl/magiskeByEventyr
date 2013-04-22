@@ -19,7 +19,7 @@ case class Lead(id: Option[Int],
 				var imageFile: Option[String], 
 				var story: Option[String],
 				var anchoring: Option[String],
-				priority: Int)
+				var priority: Int)
 
 object Lead {
 	// -- Parsers
@@ -112,7 +112,7 @@ object Lead {
         'imageFile -> lead.imageFile,
         'story -> lead.story,
         'anchoring -> lead.anchoring,
-        'priority -> lead.priority
+        'priority -> FairyTale.getLeadCount(lead.fairyTaleId).toInt
       ).executeUpdate
       
       lead
@@ -143,4 +143,30 @@ object Lead {
       
     }
   }
+    
+	def setPriority(id: Int, priority: Int) = {
+	  val lead = Lead.findById(id).get
+	  
+	  val fairyTaleLeads = FairyTale.getLeads(lead.fairyTaleId)
+	  
+	  fairyTaleLeads.foreach {
+	    fairyTaleLead => if (!(fairyTaleLead.id == lead.id)){
+	      if (fairyTaleLead.priority > lead.priority && fairyTaleLead.priority <= priority) {
+	        fairyTaleLead.priority = fairyTaleLead.priority - 1
+	      } else if (fairyTaleLead.priority < lead.priority && fairyTaleLead.priority >= priority) {
+	        fairyTaleLead.priority = fairyTaleLead.priority + 1
+	      }
+	      /*fairyTaleLead.priority match {
+	        case x: Int if (x > lead.priority && x <= priority) => fairyTaleLead.priority = fairyTaleLead.priority - 1
+	        case x: Int if (x < lead.priority && x >= priority) => fairyTaleLead.priority = fairyTaleLead.priority + 1
+	      }*/
+	      
+	      Lead.update(fairyTaleLead)
+	    }
+	  }
+	  
+	  lead.priority = priority
+	  
+	  Lead.update(lead)
+	}
 }

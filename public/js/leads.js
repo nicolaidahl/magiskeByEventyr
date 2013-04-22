@@ -5,6 +5,19 @@ $(function(){
 		$(this).addClass('active');
 		loadLead($(this).attr('model-id'));
 	});
+	
+	//Make leads sortable (JQuery-ui) and attach a stop listener
+	$('#sortable-leads').sortable({
+    	stop: function(event, ui){
+    		var id = ui.item.attr('model-id');
+    		$('#sortable-leads li').each(function(key, value){
+    			if(id == $(value).attr('model-id')) {
+    				//Change priority (zero indexed) to match position (non-zero indexed)
+    				setLeadPriority(id, key - 1);
+    			}	
+    		});
+    	}
+    });
 })
 
 function loadLead(id){
@@ -30,6 +43,19 @@ function loadLead(id){
 			
 			//Approve
 			adjustContentPos();
+		},
+		error: function(data) {
+			alert("An error occured: " + data);
+		}
+	})
+}
+
+function setLeadPriority(id, priority){
+	jsRoutes.controllers.InternalLead.setLeadPriority(id, priority).ajax({
+		success: function(leads) {
+			for (var i = 0; i < leads.length; i++) {
+			    $('#sortable-leads li[model-id=' + leads[i].id + ']').attr('model-priority', leads[i].priority);
+			}
 		},
 		error: function(data) {
 			alert("An error occured: " + data);

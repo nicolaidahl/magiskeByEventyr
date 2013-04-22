@@ -15,6 +15,7 @@ POST	/internal/:customerId/fairytales				controllers.InternalFairyTale.saveFairy
 GET		/internal/fairytales/:id						controllers.InternalFairyTale.fairyTale(id: Int)
 POST	/internal/leads/newLead							controllers.InternalLead.newLead
 POST	/internal/leads/getLead							controllers.InternalLead.getLead(id: Int)
+POST	/internal/leads/setPriority						controllers.InternalLead.setLeadPriority(id: Int, priority: Int)
 POST	/internal/leads/updateLeadWithAudio				controllers.InternalLead.updateLeadWithAudio
 POST	/internal/leads/updateLeadWithStory				controllers.InternalLead.updateLeadWithStory
 POST	/internal/leads/updateLeadWithImage				controllers.InternalLead.updateLeadWithImage

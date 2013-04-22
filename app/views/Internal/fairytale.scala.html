@@ -10,13 +10,13 @@
 			<div id="map_canvas"></div>
 		</div>
 		<div class="span3">
-			<ul class="nav nav-list lead-list">
+			<ul id="sortable-leads" class="nav nav-list lead-list">
 				@if(FairyTale.getLeads(fairyTale.id.get).length == 0){
 					<li class="nav-header">Ingen ledetråde!</li>
 				} else {
 					<li class="nav-header">Ledetråde</li>
 					@for((lead, idx) <- FairyTale.getLeads(fairyTale.id.get).zipWithIndex){
-						<li model-id="@lead.id">@lead.name</li>
+						<li model-id="@lead.id" model-priority="@lead.priority">@lead.name</li>
 					} 
 					<script type="text/javascript">
 					$(function(){
@@ -31,7 +31,7 @@
 					});
 					</script>
 				}
-			</ul>
+			</ul>	
 			<div class="nav-footer">
 				<a href="#leadModal" role="button" class="btn-small btn-primary pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret ledetr��d</a>
 			</div>

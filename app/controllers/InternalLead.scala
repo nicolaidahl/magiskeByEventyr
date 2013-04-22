@@ -10,6 +10,8 @@ import org.joda.time.DateTime
 import play.api.mvc.MultipartFormData.FilePart
 import play.api.libs.Files.TemporaryFile
 import toolbox.IOHelper
+import models.FairyTale
+import play.api.libs.json.Json
 
 object InternalLead extends Controller with Secured {
   
@@ -31,6 +33,19 @@ object InternalLead extends Controller with Secured {
     }
   }
   
+  def setLeadPriority (id: Int, priority: Int) = Action { implicit request =>
+    val updated = Lead.setPriority(id, priority)
+    Ok(Json.toJson(FairyTale.getLeads(updated.fairyTaleId).map(l => Map(
+        		"id" -> Json.toJson(l.id),
+        		"priority" -> Json.toJson(l.priority)
+        	
+          )
+    	)
+      )
+    )
+  }
+  
+
   def updateLeadWithAudio = IsAuthenticated(parse.multipartFormData) { _ => implicit request =>
     val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
   	val soundOpt = request.body.file("leadAudio")

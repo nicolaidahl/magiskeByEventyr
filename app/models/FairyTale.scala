@@ -94,9 +94,17 @@ object FairyTale {
   
   def getLeads(fairyTaleId: Int) : Seq[Lead] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from lead where fairyTaleId={fairyTaleId}").on(
+      SQL("select * from lead where fairyTaleId={fairyTaleId} order by priority asc").on(
     	'fairyTaleId -> fairyTaleId
       ).as(Lead.simple *)
+    }
+  }
+  
+  def getLeadCount(fairyTaleId: Int) : Long = {
+    DB.withConnection { implicit connection =>
+      SQL("select COUNT(*) from lead where fairyTaleId={fairyTaleId}").on(
+    	'fairyTaleId -> fairyTaleId
+      ).as(scalar[Long].single)
     }
   }
 }

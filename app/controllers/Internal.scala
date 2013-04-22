@@ -58,7 +58,8 @@ object Internal extends Controller with Secured {
   def javascriptRoutes() = Action { implicit request =>
     Ok(
       Routes.javascriptRouter("jsRoutes")(
-        controllers.routes.javascript.InternalLead.getLead
+        controllers.routes.javascript.InternalLead.getLead,
+        controllers.routes.javascript.InternalLead.setLeadPriority
       )
     ).as(JAVASCRIPT)
   }

@@ -65,7 +65,9 @@
 }
 
 /* Lead image */
-#images #image-anchoring {
+#images #image-anchoring,
+#story #story-story,
+#audio #audio-story {
 	height: 170px;
 	resize: none;
 	width: 100%;

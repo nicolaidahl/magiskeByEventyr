@@ -19,6 +19,7 @@ POST	/internal/leads/setPriority						controllers.InternalLead.setLeadPriority(i
 POST	/internal/leads/updateLeadWithAudio				controllers.InternalLead.updateLeadWithAudio
 POST	/internal/leads/updateLeadWithStory				controllers.InternalLead.updateLeadWithStory
 POST	/internal/leads/updateLeadWithImage				controllers.InternalLead.updateLeadWithImage
+POST	/internal/leads/approveLead						controllers.InternalLead.approveLead(id: Int)
 POST	/internal/leads/disapproveLead					controllers.InternalLead.disapproveLead
 
 

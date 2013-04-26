@@ -12,14 +12,17 @@ import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import toolbox.IOHelper
 
-case class Lead(id: Option[Int], 
-				fairyTaleId: Int, 
-				name: String, 
-				var soundFile: Option[String], 
-				var imageFile: Option[String], 
-				var story: Option[String],
-				var anchoring: Option[String],
-				var priority: Int)
+case class Lead(
+    id: Option[Int], 
+	fairyTaleId: Int, 
+	name: String, 
+	var soundFile: Option[String], 
+	var imageFile: Option[String], 
+	var story: Option[String],
+	var anchoring: Option[String],
+	var priority: Int,
+	var approved: Boolean
+)
 
 object Lead {
 	// -- Parsers
@@ -35,9 +38,10 @@ object Lead {
     get[Option[String]]("lead.imageFile") ~ 
     get[Option[String]]("lead.story") ~
     get[Option[String]]("lead.anchoring") ~
-    get[Int]("lead.priority") map {
-      case id~fairyTaleId~name~soundFile~imageFile~story~anchoring~priority => 
-        Lead(Some(id), fairyTaleId, name, soundFile, imageFile, story, anchoring, priority)
+    get[Int]("lead.priority") ~
+    get[Boolean]("lead.approved") map {
+      case id~fairyTaleId~name~soundFile~imageFile~story~anchoring~priority~approved => 
+        Lead(Some(id), fairyTaleId, name, soundFile, imageFile, story, anchoring, priority, approved)
     }
   }
   
@@ -50,7 +54,8 @@ object Lead {
         "imageFile" -> optional[String](text),
         "story" -> optional[String](text),
         "anchoring" -> optional[String](text),
-        "priority" -> number
+        "priority" -> number,
+        "approved" -> boolean
     )(Lead.apply)(Lead.unapply)
   )
 
@@ -64,10 +69,12 @@ object Lead {
 	      "id" -> Json.toJson(lead.id),
 	      "fairyTaleId" -> Json.toJson(lead.fairyTaleId),
 	      "name" -> Json.toJson(lead.name),
+	      "soundFile" -> Json.toJson(if (lead.soundFile.isDefined) "/assets/fairytales/" + lead.fairyTaleId + "/audio/" + lead.soundFile.get else ""),
 	      "imageFile" -> Json.toJson(if (lead.imageFile.isDefined) "/assets/fairytales/" + lead.fairyTaleId + "/img/" + lead.imageFile.get else ""),
-	      "anchoring" -> Json.toJson(lead.anchoring.getOrElse("")),
 	      "story" -> Json.toJson(lead.story.getOrElse("")),
-	      "soundFile" -> Json.toJson(if (lead.soundFile.isDefined) "/assets/fairytales/" + lead.fairyTaleId + "/audio/" + lead.soundFile.get else "")
+	      "anchoring" -> Json.toJson(lead.anchoring.getOrElse("")),
+	      "priority" -> Json.toJson(lead.priority),
+	      "approved" -> Json.toJson(lead.approved)
       )
 	)
   }
@@ -127,7 +134,7 @@ object Lead {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          update lead set name={name}, soundFile={soundFile}, imageFile={imageFile}, story={story}, anchoring={anchoring}, priority={priority} where id={id}
+          update lead set name={name}, soundFile={soundFile}, imageFile={imageFile}, story={story}, anchoring={anchoring}, priority={priority}, approved={approved} where id={id}
         """
       ).on(
         'id -> lead.id,
@@ -136,7 +143,8 @@ object Lead {
         'imageFile -> lead.imageFile,
         'story -> lead.story,
         'anchoring -> lead.anchoring,
-        'priority -> lead.priority
+        'priority -> lead.priority,
+        'approved -> lead.approved
       ).executeUpdate()
       
       lead

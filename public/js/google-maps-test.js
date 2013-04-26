@@ -6,10 +6,10 @@ function initialize() {
 		zoom: 6,
     	center: new google.maps.LatLng(56, 10),
     	mapTypeId: google.maps.MapTypeId.ROADMAP,
-    	//zoomControl: false,
-    	//scaleControl: false,
-    	//scrollwheel: false,
-    	//disableDoubleClickZoom: true,
+    	zoomControl: false,
+    	scaleControl: false,
+    	scrollwheel: false,
+    	disableDoubleClickZoom: true,
 	}
 	map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 	

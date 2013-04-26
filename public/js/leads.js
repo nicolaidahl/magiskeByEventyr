@@ -18,6 +18,10 @@ $(function(){
     		});
     	}
     });
+	
+	$('#yes').click(function (){
+		setLeadApproved($($('.lead-id')[0]).val());
+	})
 })
 
 function loadLead(id){
@@ -61,4 +65,19 @@ function setLeadPriority(id, priority){
 			alert("An error occured: " + data);
 		}
 	})
+}
+
+function setLeadApproved(id){
+	jsRoutes.controllers.InternalLead.approveLead(id).ajax({
+		success: function(response) {
+			if (response.nextLeadPriority != -1) {
+				$('#sortable-leads li[model-priority=' + response.nextLeadPriority + ']').click();
+			} else {
+				//Everything approved - do something funky! (Ask to publish?)
+			}
+		},
+		error: function(data) {
+			alert("An error occured: " + data);
+		}
+	});
 }

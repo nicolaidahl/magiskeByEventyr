@@ -45,7 +45,6 @@ object InternalLead extends Controller with Secured {
     )
   }
   
-
   def updateLeadWithAudio = IsAuthenticated(parse.multipartFormData) { _ => implicit request =>
     val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
   	val soundOpt = request.body.file("leadAudio")
@@ -99,6 +98,18 @@ object InternalLead extends Controller with Secured {
     Lead.update(lead)
     
     Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+  }
+  
+  def approveLead (id: Int) = Action { implicit request =>
+    val lead = Lead.findById(id).get;
+    lead.approved = true;
+    Lead.update(lead)
+    //Find the priority of the lead which has the lowest priority among all un-approved leads
+    val prio = FairyTale.getLeads(lead.fairyTaleId).filter(l => !l.approved).foldLeft(Int.MaxValue)((p, e) => p min e.priority)
+    //Return the priority if one was found (not Int.maxvalue) - otherwise -1
+    Ok(Json.toJson(Map(
+    		"nextLeadPriority" -> Json.toJson(if (prio == Int.MaxValue) -1 else prio)
+    )))
   }
   
   def disapproveLead = Action(parse.multipartFormData) { implicit request =>

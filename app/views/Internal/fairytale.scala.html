@@ -2,6 +2,7 @@
 @Layout.internal_main("Magiske Byeventyr! - Intern brug") {
 	<script type="text/javascript" src="@routes.Internal.javascriptRoutes"></script>
 	<script type="text/javascript" src="@routes.Assets.at("js/leads.js")"></script>
+	<script type="text/javascript" src="@routes.Assets.at("js/file-upload.js")"></script>
 	@if(userType == "admin"){
 		<script type="text/javascript" src="@routes.Assets.at("js/admin.js")"></script>
 	}
@@ -36,10 +37,6 @@
 				<a href="#leadModal" role="button" class="btn-small btn-primary pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret ledetråd</a>
 			</div>
 			<div id="leadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			  <div class="modal-header">
-			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-			    <h3 id="myModalLabel">Opret lead</h3>
-			  </div>
 			  @views.html.Internal.templates.lead_form(fairyTale.id.get, leadForm)
 			</div>
 		</div>
@@ -86,7 +83,7 @@
 			  				</div>
 			  			</div>
 			  			<div class="row-fluid">
-								<input type="file" class="pull-right" name="image_file">
+			  				@views.html.Internal.templates.upload("image_file","Push to upload image","pull-right","image/*")
 						</div>
 			  			<div class="row-fluid">
 								<input type="submit" class="btn btn-primary pull-right" value="Gem" />
@@ -142,7 +139,7 @@
 		  			<div class="row-fluid">
 	  					@helper.form(action = routes.InternalLead.updateLeadWithAudio, 'enctype -> "multipart/form-data") {
 	  						<input type="hidden" name="id" class="lead-id" value="">
-							<input type="file" class="pull-right" name="leadAudio">
+							@views.html.Internal.templates.upload("leadAudio","Push to upload audio","pull-right","audio/*")
 	  					}
   					</div>
 		  			<div class="row-fluid">

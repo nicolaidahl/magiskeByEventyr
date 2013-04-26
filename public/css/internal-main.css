@@ -102,3 +102,14 @@
 	margin-left: auto;
 	border-radius: 4px;
 }
+
+/*Filu upload styling*/
+.file {
+    display: none;
+    margin-top: 10px;
+	margin-bottom: 10px;
+	border: 2px solid;
+	padding: 4px;
+	border-radius: 4px;
+	cursor: pointer;
+}

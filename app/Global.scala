@@ -1,14 +1,14 @@
 import play.api._
-
 import models._
 import anorm._
+import play.api.data.format.Formatter
+import play.api.data.FormError
 
 object Global extends GlobalSettings {
   
   override def onStart(app: Application) {
     InitialData.insert()
   }
-  
 }
 
 /**

@@ -18,7 +18,7 @@
 				} else {
 					<li class="nav-header">Ledetråde</li>
 					@for((lead, idx) <- FairyTale.getLeads(fairyTale.id.get).zipWithIndex){
-						<li model-id="@lead.id" model-priority="@lead.priority">@lead.name</li>
+						<li model-id="@lead.id" model-priority="@lead.priority" model-lat="@lead.latitude" model-lng="@lead.longitude">@lead.name</li>
 					} 
 					<script type="text/javascript">
 					$(function(){

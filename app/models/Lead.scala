@@ -11,6 +11,8 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import toolbox.IOHelper
+import play.api.data.format._
+import toolbox.FormExtensions
 
 case class Lead(
     id: Option[Int], 
@@ -21,12 +23,13 @@ case class Lead(
 	var story: Option[String],
 	var anchoring: Option[String],
 	var priority: Int,
-	var approved: Boolean
+	var approved: Boolean,
+	var latitude: Option[Double],
+	var longitude: Option[Double]
 )
 
 object Lead {
 	// -- Parsers
-  
   /**
    * Parse a Lead from a ResultSet
    */
@@ -39,9 +42,11 @@ object Lead {
     get[Option[String]]("lead.story") ~
     get[Option[String]]("lead.anchoring") ~
     get[Int]("lead.priority") ~
-    get[Boolean]("lead.approved") map {
-      case id~fairyTaleId~name~soundFile~imageFile~story~anchoring~priority~approved => 
-        Lead(Some(id), fairyTaleId, name, soundFile, imageFile, story, anchoring, priority, approved)
+    get[Boolean]("lead.approved") ~
+    get[Option[Double]]("lead.latitude") ~
+    get[Option[Double]]("lead.longitude") map {
+      case id~fairyTaleId~name~soundFile~imageFile~story~anchoring~priority~approved~latitude~longitude => 
+        Lead(Some(id), fairyTaleId, name, soundFile, imageFile, story, anchoring, priority, approved, latitude, longitude)
     }
   }
   
@@ -55,7 +60,9 @@ object Lead {
         "story" -> optional[String](text),
         "anchoring" -> optional[String](text),
         "priority" -> number,
-        "approved" -> boolean
+        "approved" -> boolean,
+        "latitude" -> optional[Double](of(FormExtensions.doubleFormat)),
+        "longitude" -> optional[Double](of(FormExtensions.doubleFormat))
     )(Lead.apply)(Lead.unapply)
   )
 
@@ -74,7 +81,9 @@ object Lead {
 	      "story" -> Json.toJson(lead.story.getOrElse("")),
 	      "anchoring" -> Json.toJson(lead.anchoring.getOrElse("")),
 	      "priority" -> Json.toJson(lead.priority),
-	      "approved" -> Json.toJson(lead.approved)
+	      "approved" -> Json.toJson(lead.approved),
+	      "latitude" -> Json.toJson(lead.latitude),
+	      "longitude" -> Json.toJson(lead.longitude)
       )
 	)
   }
@@ -108,8 +117,8 @@ object Lead {
     DB.withConnection { implicit connection =>
       val foo = SQL(
         """
-          insert into lead (fairyTaleId, name, soundFile, imageFile, story, anchoring, priority) values (
-    		  {fairyTaleId}, {name}, {soundFile}, {imageFile}, {story}, {anchoring}, {priority}
+          insert into lead (fairyTaleId, name, soundFile, imageFile, story, anchoring, priority, latitude, longitude) values (
+    		  {fairyTaleId}, {name}, {soundFile}, {imageFile}, {story}, {anchoring}, {priority}, {latitude}, {longitude}
           )
         """
       ).on(
@@ -119,7 +128,9 @@ object Lead {
         'imageFile -> lead.imageFile,
         'story -> lead.story,
         'anchoring -> lead.anchoring,
-        'priority -> FairyTale.getLeadCount(lead.fairyTaleId).toInt
+        'priority -> FairyTale.getLeadCount(lead.fairyTaleId).toInt,
+        'latitude -> lead.latitude,
+        'longitude -> lead.longitude
       ).executeUpdate
       
       lead
@@ -134,7 +145,7 @@ object Lead {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          update lead set name={name}, soundFile={soundFile}, imageFile={imageFile}, story={story}, anchoring={anchoring}, priority={priority}, approved={approved} where id={id}
+          update lead set name={name}, soundFile={soundFile}, imageFile={imageFile}, story={story}, anchoring={anchoring}, priority={priority}, approved={approved}, latitude={latitude}, longitude={longitude} where id={id}
         """
       ).on(
         'id -> lead.id,
@@ -144,7 +155,9 @@ object Lead {
         'story -> lead.story,
         'anchoring -> lead.anchoring,
         'priority -> lead.priority,
-        'approved -> lead.approved
+        'approved -> lead.approved,
+        'latitude -> lead.latitude,
+        'longitude -> lead.longitude
       ).executeUpdate()
       
       lead

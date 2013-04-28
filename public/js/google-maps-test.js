@@ -1,10 +1,12 @@
 var map = null;
 var markers = [];
+var directionDisplay;
+var directionsService = new google.maps.DirectionsService();
 
 function initialize() {
 	var mapOptions = {
 		zoom: 6,
-    	center: new google.maps.LatLng(56, 10),
+    	center: new google.maps.LatLng(55.6576, 12.5888),
     	mapTypeId: google.maps.MapTypeId.ROADMAP,
     	zoomControl: false,
     	scaleControl: false,
@@ -12,12 +14,63 @@ function initialize() {
     	disableDoubleClickZoom: true,
 	}
 	map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-	
-	var marker = new google.maps.Marker({
-	  position: map.getCenter(),
-	  map: map,
-	  title: 'Click to zoom'
-	});
+	directionsDisplay = new google.maps.DirectionsRenderer();
+	directionsDisplay.setMap(map);
+	updateMarkers();
+}
+
+function clearMarkers() {
+	for (var i = 0; i < markers.length; i++) {
+        if (markers[i].directions) this.markers[i].directions.setMap(null);
+        this.markers[i].setMap(null);
+    }
+	markers = [];
+}
+
+function updateMarkers() {
+	clearMarkers();
+	var list = $('#sortable-leads li'); 
+	if (list.length == 2) { //Only one element
+		var marker = new google.maps.Marker({
+		  position: new google.maps.LatLng($($(list)[1]).attr('model-lat'), $($(list)[1]).attr('model-lng')),
+		  map: map,
+		  title: $($(list)[1]).text()
+		});
+		markers.push()
+	} else if (list.length > 2) {
+		var start;
+		var end;
+		var waypts = [];
+		
+		$(list).each(function(key, value){
+			if($(value).attr('model-id')) { //This is a lead list-item and not the header
+				if(key == 1) { //Start (0th index is the header)
+					start = new google.maps.LatLng($(value).attr('model-lat'), $(value).attr('model-lng'));
+				} else if (key == list.length - 1) { //End
+					end = new google.maps.LatLng($(value).attr('model-lat'), $(value).attr('model-lng'));
+				} else { //Waypoint
+					waypts.push({
+			            location: new google.maps.LatLng($(value).attr('model-lat'), $(value).attr('model-lng')),
+			            stopover:true
+		            });
+				}
+			}	
+		});
+		
+		var request = {
+            origin: start,
+            destination: end,
+            waypoints: waypts,
+            optimizeWaypoints: false,
+            travelMode: google.maps.DirectionsTravelMode.WALKING
+        };
+        directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+                var route = response.routes[0];
+            }
+        });
+	}
 }
 
 function fitMapViewPort(latlngs) {

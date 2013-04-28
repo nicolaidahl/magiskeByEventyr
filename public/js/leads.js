@@ -16,6 +16,7 @@ $(function(){
     				setLeadPriority(id, key - 1);
     			}	
     		});
+    		updateMarkers();
     	}
     });
 	

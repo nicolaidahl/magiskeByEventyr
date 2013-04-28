@@ -12,6 +12,7 @@ import play.api.libs.Files.TemporaryFile
 import toolbox.IOHelper
 import models.FairyTale
 import play.api.libs.json.Json
+import toolbox.GeotagRetriever
 
 object InternalLead extends Controller with Secured {
   
@@ -20,7 +21,22 @@ object InternalLead extends Controller with Secured {
   	val lead = form.get
   	val picOpt = request.body.file("leadImage")
   	
-  	lead.imageFile = if (picOpt.isDefined) Some(IOHelper.saveToFairyTale(lead.fairyTaleId, picOpt.get, IOHelper.FileType.Image)) else None
+  	val file = if (picOpt.isDefined) Some(IOHelper.saveToFairyTale(lead.fairyTaleId, picOpt.get, IOHelper.FileType.Image)) else None
+  	if (file.isDefined) {
+  	  lead.imageFile = Some(file.get.getName())
+  	  val location = GeotagRetriever.getCoordinates(file.get)
+  	  if (location.isDefined) {
+  	    lead.latitude = Some(location.get.getLatitude())
+  	    lead.longitude = Some(location.get.getLongitude())
+  	  } else {
+  	    lead.latitude = None
+  	    lead.longitude = None
+  	  }
+  	} else {
+  	  lead.imageFile = None
+  	  lead.latitude = None
+  	  lead.longitude = None
+  	} 
   
   	Lead.create(lead)
     Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
@@ -54,7 +70,7 @@ object InternalLead extends Controller with Secured {
   	  case Some (audio) =>
   	    if (lead.soundFile.isDefined) IOHelper.deleteFromFairyTale(lead.fairyTaleId, lead.soundFile.get, IOHelper.FileType.Audio)
   	    
-  	    lead.soundFile = Some(IOHelper.saveToFairyTale(lead.fairyTaleId, audio, IOHelper.FileType.Audio))
+  	    lead.soundFile = Some(IOHelper.saveToFairyTale(lead.fairyTaleId, audio, IOHelper.FileType.Audio).getName())
         Lead.update(lead)
   	  	
   	  	Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
@@ -63,13 +79,23 @@ object InternalLead extends Controller with Secured {
   
   def updateLeadWithImage = IsAuthenticated(parse.multipartFormData) { _ => implicit request =>
     val lead = Lead.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
-    
-    def doTheUpdateWithImagePath(path: Option[String]) = {
+    import java.io.File
+    def doTheUpdateWithImagePath(file: Option[File]) = {
       val anchoring = request.body.asFormUrlEncoded.get("anchoring").get(0)
 		    
 	  lead.anchoring = Some(anchoring)
-	  if(path.isDefined)
-		  lead.imageFile = path
+	  if (file.isDefined) {
+	    lead.imageFile = Some(file.get.getName())
+	    val location = GeotagRetriever.getCoordinates(file.get)
+	  	if (location.isDefined) {
+	  	  lead.latitude = Some(location.get.getLatitude())
+	  	  lead.longitude = Some(location.get.getLongitude())
+	  	} else {
+	  	  lead.latitude = None
+	  	  lead.longitude = None
+	  	}
+	  }
+		  
 	  Lead.update(lead)
     }
     
@@ -82,9 +108,9 @@ object InternalLead extends Controller with Secured {
           case Some(image) =>
             if (lead.imageFile.isDefined) IOHelper.deleteFromFairyTale(lead.fairyTaleId, lead.imageFile.get, IOHelper.FileType.Image)
             
-            val imagePath = IOHelper.saveToFairyTale(lead.fairyTaleId, image, IOHelper.FileType.Image)
+            val imageFile = IOHelper.saveToFairyTale(lead.fairyTaleId, image, IOHelper.FileType.Image)
             
-            doTheUpdateWithImagePath(Some(imagePath))
+            doTheUpdateWithImagePath(Some(imageFile))
     }
     Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
   } 

@@ -42,7 +42,7 @@ object IOHelper {
   	
   	tempFile.ref.moveTo(fileToSave)
   	
-  	fileName
+  	fileToSave
   }
 
 }

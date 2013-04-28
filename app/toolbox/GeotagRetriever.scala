@@ -11,13 +11,17 @@ object GeotagRetriever {
     val metadata = ImageMetadataReader.readMetadata(image)
   
     val gps = metadata.getDirectory(classOf[GpsDirectory])
-    val location = gps.getGeoLocation()
     
-    if (location == null)
+    
+    if (gps == null)
       None
-    else
-      Some(location)
-  
+    else {
+      val location = gps.getGeoLocation()
+      if (location == null)
+    	 None
+      else
+        Some(location)
+    }
   }
 }
 

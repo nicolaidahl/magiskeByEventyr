@@ -103,7 +103,7 @@
 	border-radius: 4px;
 }
 
-/*Filu upload styling*/
+/*File upload styling*/
 .file {
     display: none;
     margin-top: 10px;
@@ -112,4 +112,15 @@
 	padding: 4px;
 	border-radius: 4px;
 	cursor: pointer;
+}
+
+/*Modal button stylings*/
+
+a.btn-large {
+	border: 2px outset buttonface;
+	border-color: #bd362f #bd362f #802420;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	font-weight: normal;
+	display: inline-block;
+	line-height: 20px
 }

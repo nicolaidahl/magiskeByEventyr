@@ -1,6 +1,7 @@
 @(fairyTale: FairyTale, leadForm: Form[Lead], userType: String, leadId: Int = -1)
 @Layout.internal_main("Magiske Byeventyr! - Intern brug") {
 	<script type="text/javascript" src="@routes.Internal.javascriptRoutes"></script>
+	<script type="text/javascript" src="@routes.Assets.at("js/js-styling.js")"></script>
 	<script type="text/javascript" src="@routes.Assets.at("js/leads.js")"></script>
 	<script type="text/javascript" src="@routes.Assets.at("js/file-upload.js")"></script>
 	@if(userType == "admin"){

@@ -45,7 +45,7 @@ function loadLead(id){
 			
 			//Audio tab
 			
-			//Approve
+			//Adjust content position
 			adjustContentPos();
 		},
 		error: function(data) {

@@ -21,21 +21,3 @@ $(function(){
 		}
 	})
 })
-
-function adjustContentPos(){
-	if($('#approve')){
-		setTimeout(function(){
-			//Adjust audio position
-			var audio = $('#approve audio');
-			audio.animate({ marginTop: ($('#approve img').height() / 2) - (audio.height() / 2)}, 200);
-			//Adjust button position
-			//Adjust yes-button position
-			
-			var yes = $('#approve #yes');
-			//Parse height from css (as the button is using the box-sizing attribute .height isn't accurate)
-			var yesHeight = parseFloat(yes.css('height'));
-			$(yes.closest('.row-fluid').prev('.row-fluid')[0]).animate({ paddingBottom: ($('#approve img').height() / 2) - (yesHeight / 2) }, 200);
-			
-		}, 200);
-	}
-}

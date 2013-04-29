@@ -11,7 +11,8 @@ object ApplicationBuild extends Build {
     // Add your project dependencies here,
     jdbc,
     anorm,
-    "mysql" % "mysql-connector-java" % "5.1.16"
+    "mysql" % "mysql-connector-java" % "5.1.16",
+    "com.amazonaws" % "aws-java-sdk" % "1.3.11"
   )
 
 

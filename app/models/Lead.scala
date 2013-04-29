@@ -10,9 +10,11 @@ import play.api.Logger
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
-import toolbox.IOHelper
+import toolbox.LocalFileHandler
 import play.api.data.format._
 import toolbox.FormExtensions
+import plugins.S3Plugin
+import toolbox.AmazonS3FileHandler
 
 case class Lead(
     id: Option[Int], 
@@ -71,13 +73,14 @@ object Lead {
    */
   
   def json (lead: Lead) = {
+    val fileHandler = if (S3Plugin.isEnabled) AmazonS3FileHandler else LocalFileHandler
     Json.toJson(
 	  Map(
 	      "id" -> Json.toJson(lead.id),
 	      "fairyTaleId" -> Json.toJson(lead.fairyTaleId),
 	      "name" -> Json.toJson(lead.name),
-	      "soundFile" -> Json.toJson(if (lead.soundFile.isDefined) "/assets/fairytales/" + lead.fairyTaleId + "/audio/" + lead.soundFile.get else ""),
-	      "imageFile" -> Json.toJson(if (lead.imageFile.isDefined) "/assets/fairytales/" + lead.fairyTaleId + "/img/" + lead.imageFile.get else ""),
+	      "soundFile" -> Json.toJson(if (lead.soundFile.isDefined) fileHandler.getPrefixPath  + lead.soundFile.get else ""),
+	      "imageFile" -> Json.toJson(if (lead.imageFile.isDefined) fileHandler.getPrefixPath + lead.imageFile.get else ""),
 	      "story" -> Json.toJson(lead.story.getOrElse("")),
 	      "anchoring" -> Json.toJson(lead.anchoring.getOrElse("")),
 	      "priority" -> Json.toJson(lead.priority),
@@ -177,10 +180,6 @@ object Lead {
 	      } else if (fairyTaleLead.priority < lead.priority && fairyTaleLead.priority >= priority) {
 	        fairyTaleLead.priority = fairyTaleLead.priority + 1
 	      }
-	      /*fairyTaleLead.priority match {
-	        case x: Int if (x > lead.priority && x <= priority) => fairyTaleLead.priority = fairyTaleLead.priority - 1
-	        case x: Int if (x < lead.priority && x >= priority) => fairyTaleLead.priority = fairyTaleLead.priority + 1
-	      }*/
 	      
 	      Lead.update(fairyTaleLead)
 	    }

@@ -137,15 +137,15 @@
 		  					</div>
 		  				</div>
 		  			</div>
-		  			<div class="row-fluid">
-	  					@helper.form(action = routes.InternalLead.updateLeadWithAudio, 'enctype -> "multipart/form-data") {
-	  						<input type="hidden" name="id" class="lead-id" value="">
-							@views.html.Internal.templates.upload("leadAudio","Push to upload audio","pull-right","audio/*")
-	  					}
-  					</div>
-		  			<div class="row-fluid">
-						<input type="submit" class="btn btn-primary pull-right" value="Gem" />
-		  			</div>
+		  			@helper.form(action = routes.InternalLead.updateLeadWithAudio, 'enctype -> "multipart/form-data") {
+			  			<div class="row-fluid">
+		  						<input type="hidden" name="id" class="lead-id" value="">
+								@views.html.Internal.templates.upload("leadAudio","Push to upload audio","pull-right","audio/*")
+	  					</div>
+			  			<div class="row-fluid">
+							<input type="submit" class="btn btn-primary pull-right" value="Gem" />
+			  			</div>
+  					}
 		  		</div>
 	  		</div>
 		  </div>

@@ -44,11 +44,11 @@ object Lead {
     get[Option[String]]("lead.story") ~
     get[Option[String]]("lead.anchoring") ~
     get[Int]("lead.priority") ~
-    get[Boolean]("lead.approved") ~
+    get[Int]("lead.approved") ~
     get[Option[Double]]("lead.latitude") ~
     get[Option[Double]]("lead.longitude") map {
       case id~fairyTaleId~name~soundFile~imageFile~story~anchoring~priority~approved~latitude~longitude => 
-        Lead(Some(id), fairyTaleId, name, soundFile, imageFile, story, anchoring, priority, approved, latitude, longitude)
+        Lead(Some(id), fairyTaleId, name, soundFile, imageFile, story, anchoring, priority, approved==1, latitude, longitude)
     }
   }
   
@@ -145,6 +145,7 @@ object Lead {
    * Update a Lead.
    */
   def update(lead: Lead): Lead = {
+    val approved = if (lead.approved) 1 else 0
     DB.withConnection { implicit connection =>
       SQL(
         """
@@ -158,7 +159,7 @@ object Lead {
         'story -> lead.story,
         'anchoring -> lead.anchoring,
         'priority -> lead.priority,
-        'approved -> lead.approved,
+        'approved -> approved,
         'latitude -> lead.latitude,
         'longitude -> lead.longitude
       ).executeUpdate()

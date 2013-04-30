@@ -16,10 +16,10 @@ object User {
    * Parse a User from a ResultSet
    */
   val simple = {
-    get[String]("mbe_user.email") ~
-    get[String]("mbe_user.name") ~
-    get[String]("mbe_user.password") ~
-    get[String]("mbe_user.type") map {
+    get[String]("email") ~
+    get[String]("name") ~
+    get[String]("password") ~
+    get[String]("type") map {
       case email~name~password~userType => User(email, name, password, userType)
     }
   }

@@ -1,0 +1,460 @@
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: leadstate; Type: TYPE; Schema: public; Owner: mbe_user
+--
+
+CREATE TYPE leadstate AS ENUM (
+    'image',
+    'story',
+    'audio'
+);
+
+
+ALTER TYPE public.leadstate OWNER TO mbe_user;
+
+--
+-- Name: usertype; Type: TYPE; Schema: public; Owner: mbe_user
+--
+
+CREATE TYPE usertype AS ENUM (
+    'admin',
+    'creator'
+);
+
+
+ALTER TYPE public.usertype OWNER TO mbe_user;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: creating; Type: TABLE; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+CREATE TABLE creating (
+    useremail character varying(30) NOT NULL,
+    fairytaleid integer NOT NULL,
+    privilege character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.creating OWNER TO mbe_user;
+
+--
+-- Name: customer; Type: TABLE; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+CREATE TABLE customer (
+    id integer NOT NULL,
+    name character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.customer OWNER TO mbe_user;
+
+--
+-- Name: customer_id_seq; Type: SEQUENCE; Schema: public; Owner: mbe_user
+--
+
+CREATE SEQUENCE customer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.customer_id_seq OWNER TO mbe_user;
+
+--
+-- Name: customer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mbe_user
+--
+
+ALTER SEQUENCE customer_id_seq OWNED BY customer.id;
+
+
+--
+-- Name: fairy_tale; Type: TABLE; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+CREATE TABLE fairy_tale (
+    id integer NOT NULL,
+    customerid integer,
+    name character varying(40) DEFAULT NULL::character varying,
+    duedate date,
+    briefing text
+);
+
+
+ALTER TABLE public.fairy_tale OWNER TO mbe_user;
+
+--
+-- Name: fairy_tale_id_seq; Type: SEQUENCE; Schema: public; Owner: mbe_user
+--
+
+CREATE SEQUENCE fairy_tale_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.fairy_tale_id_seq OWNER TO mbe_user;
+
+--
+-- Name: fairy_tale_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mbe_user
+--
+
+ALTER SEQUENCE fairy_tale_id_seq OWNED BY fairy_tale.id;
+
+
+--
+-- Name: lead; Type: TABLE; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+CREATE TABLE lead (
+    id integer NOT NULL,
+    fairytaleid integer,
+    name character varying(40) NOT NULL,
+    soundfile character varying(50) DEFAULT NULL::character varying,
+    imagefile character varying(50) DEFAULT NULL::character varying,
+    priority integer,
+    story text,
+    anchoring text,
+    approved smallint DEFAULT 0,
+    latitude double precision,
+    longitude double precision
+);
+
+
+ALTER TABLE public.lead OWNER TO mbe_user;
+
+--
+-- Name: lead_comment; Type: TABLE; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+CREATE TABLE lead_comment (
+    id integer NOT NULL,
+    lead_id integer,
+    lead_state leadstate NOT NULL,
+    user_email character varying(30),
+    comment_date date,
+    comment text NOT NULL
+);
+
+
+ALTER TABLE public.lead_comment OWNER TO mbe_user;
+
+--
+-- Name: lead_comment_id_seq; Type: SEQUENCE; Schema: public; Owner: mbe_user
+--
+
+CREATE SEQUENCE lead_comment_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.lead_comment_id_seq OWNER TO mbe_user;
+
+--
+-- Name: lead_comment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mbe_user
+--
+
+ALTER SEQUENCE lead_comment_id_seq OWNED BY lead_comment.id;
+
+
+--
+-- Name: lead_id_seq; Type: SEQUENCE; Schema: public; Owner: mbe_user
+--
+
+CREATE SEQUENCE lead_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.lead_id_seq OWNER TO mbe_user;
+
+--
+-- Name: lead_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mbe_user
+--
+
+ALTER SEQUENCE lead_id_seq OWNED BY lead.id;
+
+
+--
+-- Name: lead_state; Type: TABLE; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+CREATE TABLE lead_state (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.lead_state OWNER TO mbe_user;
+
+--
+-- Name: lead_state_id_seq; Type: SEQUENCE; Schema: public; Owner: mbe_user
+--
+
+CREATE SEQUENCE lead_state_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.lead_state_id_seq OWNER TO mbe_user;
+
+--
+-- Name: lead_state_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mbe_user
+--
+
+ALTER SEQUENCE lead_state_id_seq OWNED BY lead_state.id;
+
+
+--
+-- Name: mbe_user; Type: TABLE; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+CREATE TABLE mbe_user (
+    email character varying(30) NOT NULL,
+    name character varying(30) DEFAULT NULL::character varying,
+    password character varying(20) DEFAULT NULL::character varying,
+    salt character varying(20) DEFAULT NULL::character varying,
+    type usertype NOT NULL
+);
+
+
+ALTER TABLE public.mbe_user OWNER TO mbe_user;
+
+--
+-- Name: privilege; Type: TABLE; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+CREATE TABLE privilege (
+    identifier character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.privilege OWNER TO mbe_user;
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY customer ALTER COLUMN id SET DEFAULT nextval('customer_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY fairy_tale ALTER COLUMN id SET DEFAULT nextval('fairy_tale_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY lead ALTER COLUMN id SET DEFAULT nextval('lead_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY lead_comment ALTER COLUMN id SET DEFAULT nextval('lead_comment_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY lead_state ALTER COLUMN id SET DEFAULT nextval('lead_state_id_seq'::regclass);
+
+
+--
+-- Name: creating_pkey; Type: CONSTRAINT; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+ALTER TABLE ONLY creating
+    ADD CONSTRAINT creating_pkey PRIMARY KEY (useremail, fairytaleid, privilege);
+
+
+--
+-- Name: customer_pkey; Type: CONSTRAINT; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+ALTER TABLE ONLY customer
+    ADD CONSTRAINT customer_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: fairy_tale_pkey; Type: CONSTRAINT; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+ALTER TABLE ONLY fairy_tale
+    ADD CONSTRAINT fairy_tale_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lead_comment_pkey; Type: CONSTRAINT; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+ALTER TABLE ONLY lead_comment
+    ADD CONSTRAINT lead_comment_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lead_imagefile_key; Type: CONSTRAINT; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+ALTER TABLE ONLY lead
+    ADD CONSTRAINT lead_imagefile_key UNIQUE (imagefile);
+
+
+--
+-- Name: lead_pkey; Type: CONSTRAINT; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+ALTER TABLE ONLY lead
+    ADD CONSTRAINT lead_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lead_soundfile_key; Type: CONSTRAINT; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+ALTER TABLE ONLY lead
+    ADD CONSTRAINT lead_soundfile_key UNIQUE (soundfile);
+
+
+--
+-- Name: lead_state_pkey; Type: CONSTRAINT; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+ALTER TABLE ONLY lead_state
+    ADD CONSTRAINT lead_state_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mbe_user_pkey; Type: CONSTRAINT; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+ALTER TABLE ONLY mbe_user
+    ADD CONSTRAINT mbe_user_pkey PRIMARY KEY (email);
+
+
+--
+-- Name: privilege_pkey; Type: CONSTRAINT; Schema: public; Owner: mbe_user; Tablespace: 
+--
+
+ALTER TABLE ONLY privilege
+    ADD CONSTRAINT privilege_pkey PRIMARY KEY (identifier);
+
+
+--
+-- Name: creating_fairytaleid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY creating
+    ADD CONSTRAINT creating_fairytaleid_fkey FOREIGN KEY (fairytaleid) REFERENCES fairy_tale(id);
+
+
+--
+-- Name: creating_privilege_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY creating
+    ADD CONSTRAINT creating_privilege_fkey FOREIGN KEY (privilege) REFERENCES privilege(identifier);
+
+
+--
+-- Name: creating_useremail_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY creating
+    ADD CONSTRAINT creating_useremail_fkey FOREIGN KEY (useremail) REFERENCES mbe_user(email);
+
+
+--
+-- Name: fairy_tale_customerid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY fairy_tale
+    ADD CONSTRAINT fairy_tale_customerid_fkey FOREIGN KEY (customerid) REFERENCES customer(id);
+
+
+--
+-- Name: lead_comment_lead_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY lead_comment
+    ADD CONSTRAINT lead_comment_lead_id_fkey FOREIGN KEY (lead_id) REFERENCES lead(id);
+
+
+--
+-- Name: lead_comment_user_email_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY lead_comment
+    ADD CONSTRAINT lead_comment_user_email_fkey FOREIGN KEY (user_email) REFERENCES mbe_user(email);
+
+
+--
+-- Name: lead_fairytaleid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mbe_user
+--
+
+ALTER TABLE ONLY lead
+    ADD CONSTRAINT lead_fairytaleid_fkey FOREIGN KEY (fairytaleid) REFERENCES fairy_tale(id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: Nikolaj
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM "Nikolaj";
+GRANT ALL ON SCHEMA public TO "Nikolaj";
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

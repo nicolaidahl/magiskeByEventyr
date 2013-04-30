@@ -12,7 +12,8 @@ object ApplicationBuild extends Build {
     jdbc,
     anorm,
     "mysql" % "mysql-connector-java" % "5.1.16",
-    "com.amazonaws" % "aws-java-sdk" % "1.3.11"
+    "com.amazonaws" % "aws-java-sdk" % "1.3.11",
+    "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
   )
 
 

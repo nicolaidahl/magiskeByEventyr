@@ -16,10 +16,10 @@ object User {
    * Parse a User from a ResultSet
    */
   val simple = {
-    get[String]("user.email") ~
-    get[String]("user.name") ~
-    get[String]("user.password") ~
-    get[String]("user.type") map {
+    get[String]("mbe_user.email") ~
+    get[String]("mbe_user.name") ~
+    get[String]("mbe_user.password") ~
+    get[String]("mbe_user.type") map {
       case email~name~password~userType => User(email, name, password, userType)
     }
   }
@@ -31,7 +31,7 @@ object User {
    */
   def findByEmail(email: String): Option[User] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from user where email = {email}").on(
+      SQL("select * from mbe_user where email = {email}").on(
         'email -> email
       ).as(User.simple.singleOpt)
     }
@@ -42,7 +42,7 @@ object User {
    */
   def findAll: Seq[User] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from user").as(User.simple *)
+      SQL("select * from mbe_user").as(User.simple *)
     }
   }
   
@@ -53,7 +53,7 @@ object User {
     DB.withConnection { implicit connection =>
       SQL(
         """
-         select * from user where 
+         select * from mbe_user where 
          email = {email} and password = {password}
         """
       ).on(
@@ -70,7 +70,7 @@ object User {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          insert into user values (
+          insert into mbe_user values (
             {email}, {name}, {password}, {type}
           )
         """

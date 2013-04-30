@@ -25,9 +25,9 @@ object FairyTale {
    */
   val simple = {
     get[Int]("fairy_tale.id") ~
-    get[Int]("fairy_tale.customerId") ~
+    get[Int]("fairy_tale.customerid") ~
     get[String]("fairy_tale.name") ~
-    get[Date]("fairy_tale.dueDate") ~
+    get[Date]("fairy_tale.duedate") ~
     get[String]("fairy_tale.briefing") map {
       case id~customerId~name~dueDate~briefing => FairyTale(Some(id), customerId, name, DateTime.parse(dueDate.toString()), briefing)
     }

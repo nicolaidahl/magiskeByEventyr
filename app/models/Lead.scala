@@ -37,10 +37,10 @@ object Lead {
    */
   val simple = {
     get[Int]("lead.id") ~
-    get[Int]("lead.fairyTaleId") ~
+    get[Int]("lead.fairytaleid") ~
     get[String]("lead.name") ~
-    get[Option[String]]("lead.soundFile") ~
-    get[Option[String]]("lead.imageFile") ~ 
+    get[Option[String]]("lead.soundfile") ~
+    get[Option[String]]("lead.imagefile") ~ 
     get[Option[String]]("lead.story") ~
     get[Option[String]]("lead.anchoring") ~
     get[Int]("lead.priority") ~

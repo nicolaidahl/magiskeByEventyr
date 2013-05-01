@@ -17,10 +17,10 @@
 						<ul class="thumbnails">
 				}	
 							<li class="span3">
-								<a href="@routes.InternalFairyTale.fairyTale(fairyTale.id.getOrElse(-1))">
+								<a href='@routes.InternalFairyTale.fairyTale(fairyTale.id.getOrElse(-1), -1, "")'>
 								<div class="thumbnail">
 									<h3 class="text-center">@fairyTale.name</h3>
-									<img src="http://www.templatis.com/images/free/free-generic-logo-0029.jpg" alt="customer logo" />
+									<img src="@fairyTale.imagefile" alt="Eventyr billede" />
 								</div>
 								</a>
 							</li>
@@ -74,7 +74,7 @@
 	<div class="row-fluid">
 		<div class="navbar">
 		  <div class="navbar-inner">
-		    <a class="brand" href="#">TODO: LOGO</a>
+		    <a class="brand" href="@routes.Application.index"></a>
 		    <ul class="nav">
 		    	<li><a href="@routes.InternalCustomer.customers">Kundeoversigt</a></li>
 		    </ul>

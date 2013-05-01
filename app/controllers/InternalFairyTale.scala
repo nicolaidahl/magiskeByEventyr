@@ -35,11 +35,11 @@ object InternalFairyTale extends Controller with Secured {
   }
 	
   //TODO: Return error if None!
-  def fairyTale (id: Int) = IsAuthenticated { username => _ =>
+  def fairyTale (id: Int, leadId: Int, tab: String) = IsAuthenticated { username => _ =>
     User.findByEmail(username).map { user =>
       FairyTale.findById(id) match {
         case None => BadRequest(views.html.Internal.customers(Customer.findAll, InternalCustomer.customerForm))
-        case Some (fairyTale) => Ok(views.html.Internal.fairytale(fairyTale, Lead.form, user.userType))
+        case Some (fairyTale) => Ok(views.html.Internal.fairytale(fairyTale, Lead.form, user.userType, leadId, tab))
       }    	
     }.getOrElse(Forbidden)
   }

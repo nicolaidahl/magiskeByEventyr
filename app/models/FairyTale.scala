@@ -5,16 +5,16 @@ import play.api.Play.current
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
-
 import anorm._
 import anorm.SqlParser._
-
 import java.util.Date
-
 import org.joda.time.DateTime
 import org.joda.convert._
+import plugins.S3Plugin
+import toolbox.AmazonS3FileHandler
+import toolbox.LocalFileHandler
 
-case class FairyTale(id: Option[Int], customerId: Int, name: String, dueDate: DateTime, briefing: String)
+case class FairyTale(id: Option[Int], customerId: Int, name: String, dueDate: DateTime, briefing: String, imagefile: Option[String])
 
 object FairyTale {
   
@@ -28,8 +28,15 @@ object FairyTale {
     get[Int]("fairy_tale.customerid") ~
     get[String]("fairy_tale.name") ~
     get[Date]("fairy_tale.duedate") ~
-    get[String]("fairy_tale.briefing") map {
-      case id~customerId~name~dueDate~briefing => FairyTale(Some(id), customerId, name, DateTime.parse(dueDate.toString()), briefing)
+    get[String]("fairy_tale.briefing") ~
+    get[Option[String]]("lead.imagefile") map {
+      case id~customerId~name~dueDate~briefing~imagefile => 
+        FairyTale(Some(id), customerId, name, DateTime.parse(dueDate.toString()), briefing, if(imagefile.isDefined){
+          if(S3Plugin.isEnabled)
+            Some(AmazonS3FileHandler.getPrefixPath + imagefile.get)
+          else
+        	Some(LocalFileHandler.getPrefixPath + imagefile.get)
+        } else None)
     }
   }
   
@@ -39,7 +46,8 @@ object FairyTale {
         "customerId" -> number,
         "name" -> text,
         "dueDate" -> jodaDate("yyyy-MM-dd"),
-        "briefing" -> text
+        "briefing" -> text,
+        "imageFile" -> optional[String](text)
     )(FairyTale.apply)(FairyTale.unapply)
   )
 	
@@ -48,11 +56,17 @@ object FairyTale {
   // -- Queries
   
   /**
-   * Retrieve all fairy tales based on customer.
+   * Retrieve all fairy tales based on customer, include image of first lead if any.
    */
   def findAllByCustomer (customerId: Int): Seq[FairyTale] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from fairy_tale where customerId={customerId}").on(
+      SQL(
+        """
+          SELECT f.id, f.customerid, f.name, f.duedate, f.briefing, l.imagefile
+          FROM fairy_tale f LEFT OUTER JOIN (SELECT lead.fairytaleid, lead.imagefile FROM lead where lead.priority = 0) l ON (f.id = l.fairytaleid) 
+          WHERE f.customerId={customerId}
+	    """
+      ).on(
     	'customerId -> customerId
       ).as(FairyTale.simple *)
     }
@@ -63,7 +77,13 @@ object FairyTale {
    */
   def findById (id: Int): Option[FairyTale] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from fairy_tale where id={id}").on(
+      SQL(
+        """
+          SELECT f.id, f.customerid, f.name, f.duedate, f.briefing, l.imagefile
+          FROM fairy_tale f LEFT OUTER JOIN (SELECT lead.fairytaleid, lead.imagefile FROM lead where lead.priority = 0) l ON (f.id = l.fairytaleid) 
+          WHERE f.id={id}
+        """
+      ).on(
     	'id -> id
       ).as(FairyTale.simple.singleOpt)
     }
@@ -76,7 +96,7 @@ object FairyTale {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          insert into fairy_tale (customerId, name, dueDate, briefing) values (
+          INSERT INTO fairy_tale (customerId, name, dueDate, briefing) VALUES (
     		  {customerId}, {name}, {dueDate}, {briefing}
           )
         """
@@ -88,13 +108,18 @@ object FairyTale {
       ).executeUpdate()
       
       fairyTale
-      
     }
   }
   
   def getLeads(fairyTaleId: Int) : Seq[Lead] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from lead where fairyTaleId={fairyTaleId} order by priority asc").on(
+      SQL(
+        """
+          SELECT * 
+          FROM lead 
+          WHERE fairyTaleId={fairyTaleId} ORDER BY priority ASC
+        """
+      ).on(
     	'fairyTaleId -> fairyTaleId
       ).as(Lead.simple *)
     }
@@ -102,7 +127,13 @@ object FairyTale {
   
   def getLeadCount(fairyTaleId: Int) : Long = {
     DB.withConnection { implicit connection =>
-      SQL("select COUNT(*) from lead where fairyTaleId={fairyTaleId}").on(
+      SQL(
+        """
+          SELECT COUNT(*) 
+          FROM lead 
+          WHERE fairyTaleId={fairyTaleId}
+        """
+      ).on(
     	'fairyTaleId -> fairyTaleId
       ).as(scalar[Long].single)
     }

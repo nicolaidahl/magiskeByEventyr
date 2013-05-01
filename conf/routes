@@ -6,13 +6,14 @@
 GET     /                           			controllers.Application.index
 GET		/about									controllers.Application.about
 GET		/fairyTales/:id							controllers.Application.fairyTale(id: Int)
+POST	/fairyTales/getLeads					controllers.Application.getLeads(fairyTaleId: Int)
 
 # Internal content
 GET		/internal										controllers.InternalCustomer.customers
 POST	/internal										controllers.InternalCustomer.saveCustomer
 GET		/internal/:customerId/fairytales				controllers.InternalFairyTale.fairyTales(customerId: Int)
 POST	/internal/:customerId/fairytales				controllers.InternalFairyTale.saveFairyTale(customerId: Int)
-GET		/internal/fairytales/:id						controllers.InternalFairyTale.fairyTale(id: Int)
+GET		/internal/fairytales/:id						controllers.InternalFairyTale.fairyTale(id: Int, leadId: Int, tab: String)
 POST	/internal/leads/newLead							controllers.InternalLead.newLead
 POST	/internal/leads/getLead							controllers.InternalLead.getLead(id: Int)
 POST	/internal/leads/setPriority						controllers.InternalLead.setLeadPriority(id: Int, priority: Int)
@@ -30,7 +31,8 @@ POST    /internal/login             controllers.Internal.authenticate
 GET     /internal/logout            controllers.Internal.logout
 
 # Javascript routing
-GET 	/assets/javascripts/internal/routes		controllers.Internal.javascriptRoutes				
+GET 	/assets/javascripts/internal/routes		controllers.Internal.javascriptRoutes	
+GET		/assets/javascripts/external/routes		controllers.Application.javascriptRoutes			
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

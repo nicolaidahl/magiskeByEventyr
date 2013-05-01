@@ -48,7 +48,7 @@ object InternalLead extends Controller with Secured {
   	} 
   
   	Lead.create(lead)
-    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId, -1, ""))
   }
   
   def getLead (id: Int) = IsAuthenticated { _ => implicit request =>
@@ -81,8 +81,8 @@ object InternalLead extends Controller with Secured {
   	    
   	    lead.soundFile = Some(fileSaver.saveToFairyTale(audio))
         Lead.update(lead)
-  	  	
-  	  	Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+  	  	//TODO: Hardcoded admin
+  	  	Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId, lead.id.get, "audio"))
 	}	  
   }
   
@@ -121,7 +121,7 @@ object InternalLead extends Controller with Secured {
             
             doTheUpdateWithImagePath(Some(image.ref.file), Some(imageFile))
     }
-    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId, lead.id.get, ""))
   } 
   
   def updateLeadWithStory = IsAuthenticated(parse.multipartFormData) { _ => implicit request =>
@@ -132,7 +132,7 @@ object InternalLead extends Controller with Secured {
     
     Lead.update(lead)
     
-    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId))
+    Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId, lead.id.get, "story"))
   }
   
   def approveLead (id: Int) = Action { implicit request =>

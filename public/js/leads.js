@@ -21,7 +21,12 @@ $(function(){
     });
 	
 	$('#yes').click(function (){
-		setLeadApproved($($('.lead-id')[0]).val());
+		if ($($('.lead-image')[0]).attr('src') != "" && $($('.lead-audio')[0]).attr('src') != "") {
+			setLeadApproved($($('.lead-id')[0]).val());
+		} else {
+			alert("En ledetråd kan ikke godkendes uden billede og/eller lyd.");
+		}
+		
 	})
 })
 
@@ -29,23 +34,25 @@ function loadLead(id){
 	jsRoutes.controllers.InternalLead.getLead(id).ajax({
 		success: function(lead) {
 			//Update fields and elements on the page to reflect the selection
-			//Common elements
 			$('#lead-name').text("Lead: " + lead.name);
 			$('.lead-id').val(lead.id);
 			$('.lead-image').attr('src', lead.imageFile);
 			$('.lead-story').text(lead.story);
 			$('.lead-audio').attr('src', lead.soundFile);
-			//TODO: Consider going with $('audio')[0].pause()/load() if no other audio tags are introduced then 
 			$('.lead-player').each(function(key, value){
 				$(value)[0].pause();
 				$(value)[0].load();
 			});
-			//Image tab
-			$('#image-anchoring').text(lead.anchoring)
-			//Story tab
-			
-			//Audio tab
-			
+			$('#image-anchoring').text(lead.anchoring);
+			if(lead.approved) {
+				$('#yes').val('Godkendt');
+				$('#yes').attr('disabled', true);
+				$('#no').val('Fortryd');
+			} else {
+				$('#yes').val('Ja');
+				$('#yes').removeAttr('disabled');
+				$('#no').val('Nej');
+			}
 			//Adjust content position
 			adjustContentPos();
 		},
@@ -71,10 +78,14 @@ function setLeadPriority(id, priority){
 function setLeadApproved(id){
 	jsRoutes.controllers.InternalLead.approveLead(id).ajax({
 		success: function(response) {
+			$('#sortable-leads li[model-id=' + id + ']').append('<div class="icon-approved pull-right" /></div>')
 			if (response.nextLeadPriority != -1) {
 				$('#sortable-leads li[model-priority=' + response.nextLeadPriority + ']').click();
 			} else {
-				//Everything approved - do something funky! (Ask to publish?)
+				$('#approve').fadeOut();
+				setTimeout(function(){
+					$('#all-approved').fadeIn();
+				}, 400)
 			}
 		},
 		error: function(data) {

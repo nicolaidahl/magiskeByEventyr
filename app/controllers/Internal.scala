@@ -60,6 +60,7 @@ object Internal extends Controller with Secured {
       Routes.javascriptRouter("jsRoutes")(
         controllers.routes.javascript.InternalLead.getLead,
         controllers.routes.javascript.InternalLead.setLeadPriority,
+        controllers.routes.javascript.InternalLead.getNextUnapprovedLead,
         controllers.routes.javascript.InternalLead.approveLead
       )
     ).as(JAVASCRIPT)

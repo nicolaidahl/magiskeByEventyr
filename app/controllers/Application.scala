@@ -12,11 +12,13 @@ object Application extends Controller {
   
   def index = Action {
     val customers = Customer.findAll
-    val fairyTaleMap = new HashMap[Int, Seq[FairyTale]] ++ (customers map (c => (c.id.get, FairyTale.findAllByCustomer(c.id.get))))
-    /*for (customer <- customers) {
-      fairyTaleMap.put(customer.id.get, FairyTale.findAllByCustomer(customer.id.get))
-    }*/
-    Ok(views.html.Application.index(customers, fairyTaleMap))
+    val fairyTaleMap = new HashMap[Option[String], Option[Seq[FairyTale]]] ++ (customers map (c => { 
+    	if (FairyTale.findAllPublishedByCustomer(c.id.get).length > 0) 
+    	  (Some(c.name), Some(FairyTale.findAllPublishedByCustomer(c.id.get)))
+	    else
+	      (None, None)
+      }))
+    Ok(views.html.Application.index(fairyTaleMap))
   }
   
   def about = Action {

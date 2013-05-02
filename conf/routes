@@ -14,12 +14,14 @@ POST	/internal										controllers.InternalCustomer.saveCustomer
 GET		/internal/:customerId/fairytales				controllers.InternalFairyTale.fairyTales(customerId: Int)
 POST	/internal/:customerId/fairytales				controllers.InternalFairyTale.saveFairyTale(customerId: Int)
 GET		/internal/fairytales/:id						controllers.InternalFairyTale.fairyTale(id: Int, leadId: Int, tab: String)
+POST	/internal/fairytales/publish					controllers.InternalFairyTale.publish
 POST	/internal/leads/newLead							controllers.InternalLead.newLead
 POST	/internal/leads/getLead							controllers.InternalLead.getLead(id: Int)
 POST	/internal/leads/setPriority						controllers.InternalLead.setLeadPriority(id: Int, priority: Int)
 POST	/internal/leads/updateLeadWithAudio				controllers.InternalLead.updateLeadWithAudio
 POST	/internal/leads/updateLeadWithStory				controllers.InternalLead.updateLeadWithStory
 POST	/internal/leads/updateLeadWithImage				controllers.InternalLead.updateLeadWithImage
+POST	/internal/leads/getNextUnapprovedLead			controllers.InternalLead.getNextUnapprovedLead(fairyTaleId: Int)
 POST	/internal/leads/approveLead						controllers.InternalLead.approveLead(id: Int)
 POST	/internal/leads/disapproveLead					controllers.InternalLead.disapproveLead
 

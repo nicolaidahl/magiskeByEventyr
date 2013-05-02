@@ -120,3 +120,14 @@ a.btn-large {
 	display: inline-block;
 	line-height: 20px
 }
+
+/*Icons*/
+
+.icon-approved {
+	background-position: -288px 0px;
+}
+
+li.active .icon-approved {
+	background-image: url("../img/glyphicons-halflings-white.png");
+	background-position: -288px 0px;
+}

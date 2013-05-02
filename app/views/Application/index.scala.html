@@ -1,33 +1,35 @@
-@(customers: Seq[Customer], fairyTales: Map[Int, Seq[FairyTale]])
+@(customerFairyTales: Map[Option[String], Option[Seq[FairyTale]]])
 
 @Layout.external_main("Magiske Byeventyr!") {
-    @if(customers.length > 0) {
-		@for(customer <- customers){
-			<div class="row-fluid">
-				<div class="span10 offset1">
-					<h2>@customer.name</h2>
-					@for((fairyTale, idx) <- fairyTales(customer.id.get).zipWithIndex){
-						@if(idx % 4 == 0) { 
-						<div class="row-fluid">
-							<div class="span10 offset1">
-								<ul class="thumbnails">
-						}
-									<li class="span3">
-										<a href="@routes.Application.fairyTale(fairyTale.id.get)">
-										<div class="thumbnail">
-											<h3 class="text-center">@fairyTale.name</h3>
-											<img src="@fairyTale.imagefile" alt="Eventyr billede" />
-										</div>
-										</a>
-									</li>
-						@if((idx + 1) % 4 == 0) {
-								</ul>	
+    @if(customerFairyTales.count(p => p._1.isDefined) > 0) {
+		@for((name, fairyTales) <- customerFairyTales){
+			@if(name.isDefined){
+				<div class="row-fluid">
+					<div class="span10 offset1">
+						<h2>@name</h2>
+						@for((fairyTale, idx) <- fairyTales.get.zipWithIndex){
+							@if(idx % 4 == 0) { 
+							<div class="row-fluid">
+								<div class="span10 offset1">
+									<ul class="thumbnails">
+							}
+										<li class="span3">
+											<a href="@routes.Application.fairyTale(fairyTale.id.get)">
+											<div class="thumbnail">
+												<h3 class="text-center">@fairyTale.name</h3>
+												<img src="@fairyTale.imagefile" alt="Eventyr billede" />
+											</div>
+											</a>
+										</li>
+							@if((idx + 1) % 4 == 0 || idx == fairyTales.get.length - 1) {
+									</ul>	
+								</div>
 							</div>
-						</div>
+							}
 						}
-					}
+					</div>
 				</div>
-			</div>
+			}
 		}
 	} else {
 		<div class="row-fluid">

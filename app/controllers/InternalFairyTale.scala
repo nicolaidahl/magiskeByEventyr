@@ -43,6 +43,13 @@ object InternalFairyTale extends Controller with Secured {
       }    	
     }.getOrElse(Forbidden)
   }
+  
+  def publish = IsAuthenticated(parse.multipartFormData) { _ => implicit request =>
+    val fairyTale = FairyTale.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
+    fairyTale.published = true
+    FairyTale.update(fairyTale)
+    Redirect(routes.Application.index)
+  }
 }
 
 

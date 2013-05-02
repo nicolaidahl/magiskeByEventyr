@@ -10,6 +10,10 @@ $(function(){
 				$('#approve').slideDown(400);
 				adjustContentPos();
 			},400);
+			//Select the first lead that needs to be approved
+			if(nextUnapprovedLead != -1) {
+				$('#sortable-leads li[model-priority=' + nextUnapprovedLead + ']').click();
+			}
 		} else { //Off
 			$(this).removeClass('btn-danger');
 			$(this).addClass('btn-success');
@@ -19,5 +23,5 @@ $(function(){
 				$('#create').slideDown(400);
 			},400);
 		}
-	})
+	});
 })

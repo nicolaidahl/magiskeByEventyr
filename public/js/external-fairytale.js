@@ -35,10 +35,9 @@ $(function(){
 
 function moveTo(leadWithPriority){
 	$('.lead-image').attr('src', leads[leadWithPriority].imageFile);
-	$('.lead-audio').attr('src', leads[leadWithPriority].soundFile);
-	$('.lead-player').each(function(key, value){
-		$(value)[0].pause();
-		$(value)[0].load();
-	});
+	$('.jp-jplayer').jPlayer("setMedia", {
+        mp3: leads[leadWithPriority].soundFile
+    });
+	$('.player-title').text(leads[leadWithPriority].name)
 	currentLead = leadWithPriority;
 }

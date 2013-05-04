@@ -1,3 +1,5 @@
+var currentAudio = null;
+
 $(function(){
 	//Attach listeners to all leads in the lead-list
 	$('.lead-list li:nth-child(n+2)').click( function(){
@@ -21,7 +23,7 @@ $(function(){
     });
 	
 	$('#yes').click(function (){
-		if ($($('.lead-image')[0]).attr('src') != "" && $($('.lead-audio')[0]).attr('src') != "") {
+		if ($($('.lead-image')[0]).attr('src') != "" && currentAudio != "") {
 			setLeadApproved($($('.lead-id')[0]).val());
 		} else {
 			alert("En ledetråd kan ikke godkendes uden billede og/eller lyd.");
@@ -38,11 +40,10 @@ function loadLead(id){
 			$('.lead-id').val(lead.id);
 			$('.lead-image').attr('src', lead.imageFile);
 			$('.lead-story').text(lead.story);
-			$('.lead-audio').attr('src', lead.soundFile);
-			$('.lead-player').each(function(key, value){
-				$(value)[0].pause();
-				$(value)[0].load();
-			});
+			$('.jp-jplayer').jPlayer("setMedia", {
+                mp3: lead.soundFile
+            });
+			currentAudio = lead.soundFile;
 			$('#image-anchoring').text(lead.anchoring);
 			if(lead.approved) {
 				$('#yes').val('Godkendt');

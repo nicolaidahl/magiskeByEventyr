@@ -15,8 +15,8 @@ function adjustContentPos(){
 			//All images are the same - just take the one that's shown
 			imgHeight = Math.max(imgHeight, $(value).height());
 		})
-		var audio = $('audio');
+		var audio = $('.jp-audio');
 		//Audio is 30 px high, so reduce the offset by 15px
-		audio.animate({ marginTop: (imgHeight / 2) - (15)}, 200);
+		audio.animate({ marginTop: (imgHeight / 2) - 45}, 200);
 	}, 200)
 }

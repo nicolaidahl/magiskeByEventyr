@@ -86,7 +86,7 @@
 			</div>
 		</div>
 		} else {
-			<div id="approve" style="display:none;">
+			<div id="all-approved" style="display:none;">
 				<div class="row-fluid">
 					<div class="span10 offset1">
 						<div class="hero-unit">
@@ -182,12 +182,7 @@
 		  				</div>
 		  				<div class="span4" style="text-align:center;">
 		  					<p align="center">Lyd</p>
-		  					<div class="row-fluid">
-		  						<audio class="lead-player" controls>
-								  <source class="lead-audio" src="" type="audio/mpeg">
-								  Your browser does not support the audio element.
-								</audio>
-		  					</div>
+	  						@views.html.Internal.templates.audio()
 		  				</div>
 		  			</div>
 		  			@helper.form(action = routes.InternalLead.updateLeadWithAudio, 'enctype -> "multipart/form-data") {

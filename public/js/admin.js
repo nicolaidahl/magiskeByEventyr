@@ -15,7 +15,7 @@ $(function(){
 				$('#sortable-leads li[model-priority=' + nextUnapprovedLead + ']').click();
 			} else {
 				setTimeout(function(){
-					$('#all-approved').fadeIn();
+					$('#all-approved').slideDown(400);
 				}, 400)
 			}
 		} else { //Off
@@ -23,6 +23,7 @@ $(function(){
 			$(this).addClass('btn-success');
 			$(this).text('Skift til godkendelses mode');
 			$('#approve').slideUp(400);
+			$('#all-approved').slideUp(400);
 			setTimeout(function(){
 				$('#create').slideDown(400);
 			},400);

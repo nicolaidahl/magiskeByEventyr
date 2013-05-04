@@ -42,19 +42,31 @@ function updateMarkers() {
 		var end;
 		var waypts = [];
 		
+		verified = [];
+		
 		$(list).each(function(key, value){
 			if($(value).attr('model-id')) { //This is a lead list-item and not the header
-				if(key == 1) { //Start (0th index is the header)
-					start = new google.maps.LatLng($(value).attr('model-lat'), $(value).attr('model-lng'));
-				} else if (key == list.length - 1) { //End
-					end = new google.maps.LatLng($(value).attr('model-lat'), $(value).attr('model-lng'));
-				} else { //Waypoint
-					waypts.push({
-			            location: new google.maps.LatLng($(value).attr('model-lat'), $(value).attr('model-lng')),
-			            stopover:true
-		            });
+				var lat = $(value).attr('model-lat');
+				var lng = $(value).attr('model-lng');
+				if (lat && lng && lat != "" && lng != "") {
+					verified.push(value);
 				}
-			}	
+			}
+		});
+		
+		$(verified).each(function(key, value){
+			var lat = $(value).attr('model-lat');
+			var lng = $(value).attr('model-lng');
+			if (key == 0) { 
+				start = new google.maps.LatLng(lat, lng);
+			} else if (key == verified.length - 1) { //End
+				end = new google.maps.LatLng(lat, lng);
+			} else { //Waypoint
+				waypts.push({
+		            location: new google.maps.LatLng(lat, lng),
+		            stopover:true
+	            });
+			}
 		});
 		
 		var request = {

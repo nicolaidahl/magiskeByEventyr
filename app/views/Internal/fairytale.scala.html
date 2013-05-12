@@ -21,7 +21,7 @@
 			});
 		</script>
 	}
-	<div class="row-fluid" style="margin-bottom: 20px;">
+	<div class="row-fluid" style="margin-bottom: 10px;">
 		<div class="span7 offset1">
 			<div id="map_canvas"></div>
 		</div>
@@ -61,9 +61,6 @@
 					</script>
 				}
 			</ul>	
-			<div class="nav-footer">
-				<a href="#createLeadModal" role="button" class="btn-small btn-primary pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret ledetråd</a>
-			</div>
 			<div id="createLeadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			  @views.html.Internal.templates.lead_form(fairyTale.id.get, leadForm)
 			</div>
@@ -76,8 +73,14 @@
 		</div>
 	</div>    
 	<div class="row-fluid">
-		<div class="span10 offset1">
+		<div class="span8 offset1">
 			<h1 id="lead-name"></h1>
+		</div>
+		<div class="span2">
+			<a href="#createLeadModal" role="button" class="btn-small btn-primary pull-right" 
+			    data-toggle="modal" style="margin-bottom: 20px">
+			    Opret ledetråd
+		    </a>
 		</div>
 	</div>
 	@if(userType == "admin"){

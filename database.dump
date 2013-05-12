@@ -445,12 +445,12 @@ ALTER TABLE ONLY lead
 
 
 --
--- Name: public; Type: ACL; Schema: -; Owner: Nikolaj
+-- Name: public; Type: ACL; Schema: -; Owner: ndahl89
 --
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM "Nikolaj";
-GRANT ALL ON SCHEMA public TO "Nikolaj";
+REVOKE ALL ON SCHEMA public FROM "ndahl89";
+GRANT ALL ON SCHEMA public TO "ndahl89";
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 

@@ -26,7 +26,7 @@ $(function(){
 		if ($($('.lead-image')[0]).attr('src') != "" && currentAudio != "") {
 			setLeadApproved($($('.lead-id')[0]).val());
 		} else {
-			alert("En ledetråd kan ikke godkendes uden billede og/eller lyd.");
+			alert("En ledetr��d kan ikke godkendes uden billede og/eller lyd.");
 		}
 		
 	})
@@ -36,7 +36,7 @@ function loadLead(id){
 	jsRoutes.controllers.InternalLead.getLead(id).ajax({
 		success: function(lead) {
 			//Update fields and elements on the page to reflect the selection
-			$('#lead-name').text("Lead: " + lead.name);
+			$('#lead-name').text("Ledetråd: " + lead.name);
 			$('.lead-id').val(lead.id);
 			$('.lead-image').attr('src', lead.imageFile);
 			$('.lead-story').text(lead.story);

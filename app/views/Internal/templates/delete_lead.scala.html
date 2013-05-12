@@ -1,0 +1,14 @@
+@()
+
+@helper.form(action =  routes.InternalLead.deleteLead, 'enctype -> "multipart/form-data") {
+	<div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+    	<h3 id="myModalLabel">Er du sikker på at du vil slette?</h3>
+	</div>
+	
+	<input type="hidden" id="leadId" name="lead-id" class="lead-id" value="" />
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Luk</button>
+		<input type="submit" class="btn btn-danger pull-right" value="Slet" />
+	</div>
+}

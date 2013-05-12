@@ -19,7 +19,7 @@ import toolbox.AmazonS3FileHandler
 case class Lead(
     id: Option[Int], 
 	fairyTaleId: Int, 
-	name: String, 
+	var name: String, 
 	var soundFile: Option[String], 
 	var imageFile: Option[String], 
 	var story: Option[String],
@@ -131,7 +131,7 @@ object Lead {
         'imageFile -> lead.imageFile,
         'story -> lead.story,
         'anchoring -> lead.anchoring,
-        'priority -> FairyTale.getLeadCount(lead.fairyTaleId).toInt,
+        'priority -> FairyTale.getNextPriorityNumber(lead.fairyTaleId).toInt,
         'latitude -> lead.latitude,
         'longitude -> lead.longitude
       ).executeUpdate
@@ -165,6 +165,22 @@ object Lead {
       ).executeUpdate()
       
       lead
+      
+    }
+  }
+  
+  /**
+   * Delete a Lead
+   */
+  def delete(lead: Lead) = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          delete from lead where id={id}
+        """
+      ).on(
+        'id -> lead.id
+      ).executeUpdate()
       
     }
   }

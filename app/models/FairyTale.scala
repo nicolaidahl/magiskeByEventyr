@@ -176,4 +176,18 @@ object FairyTale {
       ).as(scalar[Long].single)
     }
   }
+  
+  def getNextPriorityNumber(fairyTaleId: Int): Long = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          SELECT MAX(priority) FROM lead WHERE fairytaleid={fairyTaleId};
+        """
+      ).on(
+    	'fairyTaleId -> fairyTaleId
+      ).as(scalar[Long].single) +1
+    }
+  }
+  
+  
 }

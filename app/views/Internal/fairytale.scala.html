@@ -32,7 +32,16 @@
 				} else {
 					<li class="nav-header">Ledetråde</li>
 					@for((lead, idx) <- FairyTale.getLeads(fairyTale.id.get).zipWithIndex){
-						<li model-id="@lead.id" model-priority="@lead.priority" model-lat="@lead.latitude" model-lng="@lead.longitude">@lead.name @if(lead.approved){<div class="icon-approved pull-right"></div>}</li>
+						<li model-id="@lead.id" model-priority="@lead.priority" model-lat="@lead.latitude" model-lng="@lead.longitude"
+						 class="dropdown" id="accountmenu">  
+                        	<a class="dropdown-toggle" data-toggle="dropdown" href="#">@lead.name<b class="caret"></b></a>  
+                        	<ul class="dropdown-menu"> 
+                            	<li><a href="#renameLeadModal" data-toggle="modal"">Omdøb</a></li>  
+                            	<li><a href="#deleteLeadModal" data-toggle="modal"">Slet</a></li>
+                        	</ul>  
+                        	@if(lead.approved){<div class="icon-approved pull-right"></div>}
+                    	</li>  
+						
 					} 
 					<script type="text/javascript">
 						$(function(){
@@ -49,10 +58,16 @@
 				}
 			</ul>	
 			<div class="nav-footer">
-				<a href="#leadModal" role="button" class="btn-small btn-primary pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret ledetråd</a>
+				<a href="#createLeadModal" role="button" class="btn-small btn-primary pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret ledetråd</a>
 			</div>
-			<div id="leadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="createLeadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			  @views.html.Internal.templates.lead_form(fairyTale.id.get, leadForm)
+			</div>
+			<div id="renameLeadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  @views.html.Internal.templates.rename_form()
+			</div>
+			<div id="deleteLeadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  @views.html.Internal.templates.delete_lead()
 			</div>
 		</div>
 	</div>    

@@ -51,6 +51,42 @@ object InternalLead extends Controller with Secured {
     Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId, -1, ""))
   }
   
+  
+  def deleteLead = IsAuthenticated(BodyParsers.parse.multipartFormData) { _ => implicit request =>
+    val leadIDForDeletion = request.body.asFormUrlEncoded.get("lead-id").get(0).toInt
+    val leadOpt = Lead.findById(leadIDForDeletion)
+    
+    leadOpt match {
+      case None => BadRequest("No such lead.")
+      case Some (lead) => 
+        val fairyId = lead.fairyTaleId
+        Lead.delete(lead)
+        Redirect(routes.InternalFairyTale.fairyTale(fairyId, -1, "story"))
+    }
+
+  }
+  
+  def renameLead = IsAuthenticated(BodyParsers.parse.multipartFormData) { _ => implicit request =>
+    val leadIDForRenaming = request.body.asFormUrlEncoded.get("lead-id").get(0).toInt
+    val leadOpt = Lead.findById(leadIDForRenaming)
+    
+    val newLeadNameOpt = request.body.asFormUrlEncoded.get("lead-name")
+    
+    val retVal = 
+      for {lead <- leadOpt
+         leadNameSeq <- newLeadNameOpt} yield {
+        val newLeadName = leadNameSeq(0)
+        
+        lead.name = newLeadName
+        Lead.update(lead)
+        Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId, lead.id.getOrElse(-1), "story"))
+        
+    }
+         
+    retVal.getOrElse(BadRequest("Invalid renaming."))
+
+  }
+  
   def getLead (id: Int) = IsAuthenticated { _ => implicit request =>
     Lead.findById(id) match {
       case None => BadRequest("Error")

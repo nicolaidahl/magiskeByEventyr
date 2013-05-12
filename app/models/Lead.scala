@@ -131,7 +131,7 @@ object Lead {
         'imageFile -> lead.imageFile,
         'story -> lead.story,
         'anchoring -> lead.anchoring,
-        'priority -> FairyTale.getNextPriorityNumber(lead.fairyTaleId).toInt,
+        'priority -> FairyTale.getLeadCount(lead.fairyTaleId).toInt,
         'latitude -> lead.latitude,
         'longitude -> lead.longitude
       ).executeUpdate
@@ -173,6 +173,8 @@ object Lead {
    * Delete a Lead
    */
   def delete(lead: Lead) = {
+    val leadPriority = lead.priority
+    
     DB.withConnection { implicit connection =>
       SQL(
         """
@@ -183,6 +185,17 @@ object Lead {
       ).executeUpdate()
       
     }
+    
+    val sisterLeads = findAllByFairyTale(lead.fairyTaleId)
+    
+    //Update leads with priority number higher than the deleted one
+    for (sisterLead <- sisterLeads) {
+      if(sisterLead.priority > leadPriority) {
+    	sisterLead.priority = sisterLead.priority -1
+        Lead.update(sisterLead)
+      }
+    }
+    
   }
     
 	def setPriority(id: Int, priority: Int) = {

@@ -83,143 +83,149 @@
 		    </a>
 		</div>
 	</div>
-	@if(userType == "admin"){
-		<div class="row-fluid">
-			<div class="span10 offset1">
-				<button type="button" class="btn-small btn-success" id="admin-approve-mode-toggle">Skift til godkendelses mode</button>
-			</div>
-		</div>
-		@if(!fairyTale.published){
-		<div id="approve" style="display:none;">
-			@views.html.Internal.templates.lead_approve()
-		</div>
-		<div id="all-approved" style="display:none;">
+	@if(FairyTale.getLeads(fairyTale.id.get).length == 0){
+	<div class="span10 offset1" style="text-align:center">
+		<h1 style="color: #999999;font-style:italic;height=300px">Opret den første ledetråd</h1>
+	</div>
+	} else {
+		@if(userType == "admin"){
 			<div class="row-fluid">
 				<div class="span10 offset1">
-					<div class="hero-unit">
-						@helper.form(action = routes.InternalFairyTale.publish, 'enctype -> "multipart/form-data") {
-							<input type="hidden" name="id" value="@fairyTale.id.get">
-							<h2>Alle ledetråde godkendt!</h2>
-							<p>Tryk på knappen nedenfor for at offentliggøre eventyret.</p>
-							<input type="submit" class="btn btn-success pull-right" value="Offentliggør" />
-						}
-					</div>
+					<button type="button" class="btn-small btn-success" id="admin-approve-mode-toggle">Skift til godkendelses mode</button>
 				</div>
 			</div>
-		</div>
-		} else {
+			@if(!fairyTale.published){
+			<div id="approve" style="display:none;">
+				@views.html.Internal.templates.lead_approve()
+			</div>
 			<div id="all-approved" style="display:none;">
 				<div class="row-fluid">
 					<div class="span10 offset1">
 						<div class="hero-unit">
-							<h2>Eventyret er offentliggjort!</h2>
-							<p>Der kan stadig laves rettelser i eventyret i editerings mode.</p>
-							<p>Rettelser til billeder eller lyd bliver straks udført i det offentliggjorte eventyr.</p>
+							@helper.form(action = routes.InternalFairyTale.publish, 'enctype -> "multipart/form-data") {
+								<input type="hidden" name="id" value="@fairyTale.id.get">
+								<h2>Alle ledetråde godkendt!</h2>
+								<p>Tryk på knappen nedenfor for at offentliggøre eventyret.</p>
+								<input type="submit" class="btn btn-success pull-right" value="Offentliggør" />
+							}
 						</div>
 					</div>
 				</div>
 			</div>
+			} else {
+				<div id="all-approved" style="display:none;">
+					<div class="row-fluid">
+						<div class="span10 offset1">
+							<div class="hero-unit">
+								<h2>Eventyret er offentliggjort!</h2>
+								<p>Der kan stadig laves rettelser i eventyret i editerings mode.</p>
+								<p>Rettelser til billeder eller lyd bliver straks udført i det offentliggjorte eventyr.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
 		}
-	}
-	<div id="create">
-		<div class="row-fluid">
-			<div class="span10 offset1">
-				<ul class="nav nav-tabs" id="fairyTaleTab">
-			  		<li class="active"><a id="tabImage" data-toggle="tab" href="#images">Billede</a></li>
-			  		<li><a id="tabStory" data-toggle="tab" href="#story">Historie</a></li>
-			  		<li><a id="tabAudio" data-toggle="tab" href="#audio">Lyd</a></li>
-				</ul>
-				<script type="text/javascript">
-					$(function(){
-						//Select the correct tab if one's defined
-						var tab = "@tab";
-						if(tab == "story"){
-							$('#tabStory').click();
-						} else if (tab == "audio") {
-							$('#tabAudio').click();
-						}
-					});
-				</script>
+		<div id="create">
+			<div class="row-fluid">
+				<div class="span10 offset1">
+					<ul class="nav nav-tabs" id="fairyTaleTab">
+				  		<li class="active"><a id="tabImage" data-toggle="tab" href="#images">Billede</a></li>
+				  		<li><a id="tabStory" data-toggle="tab" href="#story">Historie</a></li>
+				  		<li><a id="tabAudio" data-toggle="tab" href="#audio">Lyd</a></li>
+					</ul>
+					<script type="text/javascript">
+						$(function(){
+							//Select the correct tab if one's defined
+							var tab = "@tab";
+							if(tab == "story"){
+								$('#tabStory').click();
+							} else if (tab == "audio") {
+								$('#tabAudio').click();
+							}
+						});
+					</script>
+				</div>
 			</div>
-		</div>
-		<div class="tab-content">
-		  <div class="tab-pane active" id="images">
-		  	<div class="span10 offset1">
-		  		@helper.form(action = routes.InternalLead.updateLeadWithImage, 'enctype -> "multipart/form-data") {
-					<input type="hidden" name="id" class="lead-id" value="">
-				  	<div class="hero-unit">
-				  		<div class="row-fluid">
-			  				<div class="span8">
-			  					<p align="center">Fysisk forankring</p>
-		  						<textarea name="anchoring" id="image-anchoring" rows="10" cols="1500"></textarea>
-			  				</div>
+			<div class="tab-content">
+			  <div class="tab-pane active" id="images">
+			  	<div class="span10 offset1">
+			  		@helper.form(action = routes.InternalLead.updateLeadWithImage, 'enctype -> "multipart/form-data") {
+						<input type="hidden" name="id" class="lead-id" value="">
+					  	<div class="hero-unit">
+					  		<div class="row-fluid">
+				  				<div class="span8">
+				  					<p align="center">Fysisk forankring</p>
+			  						<textarea name="anchoring" id="image-anchoring" rows="10" cols="1500"></textarea>
+				  				</div>
+				  				<div class="span4">
+				  					<p align="center">Billede</p>
+			  						<img class="lead-image" alt="Picture placeholder" src="">
+				  				</div>
+				  			</div>
+				  			<div class="row-fluid">
+				  				@views.html.Internal.templates.upload("image_file","Push to upload image","pull-right","image/*")
+							</div>
+				  			<div class="row-fluid">
+									<input type="submit" class="btn btn-primary pull-right" value="Gem" />
+							</div>
+					  	</div>
+			  		}
+			  	</div>
+			  </div>
+			  <div class="tab-pane" id="story">
+			  	<div class="span10 offset1">
+			  		<div class="hero-unit">
+			  			@helper.form(action = routes.InternalLead.updateLeadWithStory, 'enctype -> "multipart/form-data") {
+				  			<input type="hidden" name="id" class="lead-id" value="">
+				  			<div class="row-fluid">
+				  				<div class="span4">
+				  					<p align="center">Billede</p>
+			  						<img class="lead-image" alt="Picture placeholder" src="">
+				  				</div>
+				  				<div class="span8">
+				  					<p align="center">Historie</p>
+				  					<textarea name="story" id="story-story" class="lead-story" rows="10" cols="1500"></textarea>
+				  				</div>
+				  			</div>
+				  			<div class="row-fluid">
+				  				<input type="submit" class="btn btn-primary pull-right" value="Gem" />
+				  			</div>	
+						}
+			  		</div>
+		  		</div>
+			  </div>
+			  <div class="tab-pane" id="audio">
+			  	<div class="span10 offset1">
+			  		<div class="hero-unit">
+			  			<div class="row-fluid">
 			  				<div class="span4">
 			  					<p align="center">Billede</p>
-		  						<img class="lead-image" alt="Picture placeholder" src="">
+			  					<img class="lead-image" alt="Picture placeholder" src="">
 			  				</div>
-			  			</div>
-			  			<div class="row-fluid">
-			  				@views.html.Internal.templates.upload("image_file","Push to upload image","pull-right","image/*")
-						</div>
-			  			<div class="row-fluid">
-								<input type="submit" class="btn btn-primary pull-right" value="Gem" />
-						</div>
-				  	</div>
-		  		}
-		  	</div>
-		  </div>
-		  <div class="tab-pane" id="story">
-		  	<div class="span10 offset1">
-		  		<div class="hero-unit">
-		  			@helper.form(action = routes.InternalLead.updateLeadWithStory, 'enctype -> "multipart/form-data") {
-			  			<input type="hidden" name="id" class="lead-id" value="">
-			  			<div class="row-fluid">
 			  				<div class="span4">
-			  					<p align="center">Billede</p>
-		  						<img class="lead-image" alt="Picture placeholder" src="">
-			  				</div>
-			  				<div class="span8">
 			  					<p align="center">Historie</p>
-			  					<textarea name="story" id="story-story" class="lead-story" rows="10" cols="1500"></textarea>
+			  					<textarea id="audio-story" class="lead-story" rows="10" cols="1500" readonly></textarea>
+			  				</div>
+			  				<div class="span4" style="text-align:center;">
+			  					<p align="center">Lyd</p>
+		  						@views.html.Internal.templates.audio()
 			  				</div>
 			  			</div>
-			  			<div class="row-fluid">
-			  				<input type="submit" class="btn btn-primary pull-right" value="Gem" />
-			  			</div>	
-					}
+			  			@helper.form(action = routes.InternalLead.updateLeadWithAudio, 'enctype -> "multipart/form-data") {
+				  			<div class="row-fluid">
+			  						<input type="hidden" name="id" class="lead-id" value="">
+									@views.html.Internal.templates.upload("leadAudio","Push to upload audio","pull-right","audio/*")
+		  					</div>
+				  			<div class="row-fluid">
+								<input type="submit" class="btn btn-primary pull-right" value="Gem" />
+				  			</div>
+	  					}
+			  		</div>
 		  		</div>
-	  		</div>
+			  </div>
 		  </div>
-		  <div class="tab-pane" id="audio">
-		  	<div class="span10 offset1">
-		  		<div class="hero-unit">
-		  			<div class="row-fluid">
-		  				<div class="span4">
-		  					<p align="center">Billede</p>
-		  					<img class="lead-image" alt="Picture placeholder" src="">
-		  				</div>
-		  				<div class="span4">
-		  					<p align="center">Historie</p>
-		  					<textarea id="audio-story" class="lead-story" rows="10" cols="1500" readonly></textarea>
-		  				</div>
-		  				<div class="span4" style="text-align:center;">
-		  					<p align="center">Lyd</p>
-	  						@views.html.Internal.templates.audio()
-		  				</div>
-		  			</div>
-		  			@helper.form(action = routes.InternalLead.updateLeadWithAudio, 'enctype -> "multipart/form-data") {
-			  			<div class="row-fluid">
-		  						<input type="hidden" name="id" class="lead-id" value="">
-								@views.html.Internal.templates.upload("leadAudio","Push to upload audio","pull-right","audio/*")
-	  					</div>
-			  			<div class="row-fluid">
-							<input type="submit" class="btn btn-primary pull-right" value="Gem" />
-			  			</div>
-  					}
-		  		</div>
-	  		</div>
-		  </div>
-	  </div>
+	}
 	</div>
 } {
 	<div class="row-fluid">		

@@ -33,15 +33,16 @@
 					<li class="nav-header">Ledetråde</li>
 					@for((lead, idx) <- FairyTale.getLeads(fairyTale.id.get).zipWithIndex){
 						<li model-id="@lead.id" model-priority="@lead.priority" model-lat="@lead.latitude" model-lng="@lead.longitude">
-								@lead.name @if(lead.approved){<div class="icon-approved pull-right"></div>}
-						    <div model-id="@lead.id" model-priority="@lead.priority" model-lat="@lead.latitude" model-lng="@lead.longitude"
-						      class="dropdown" id="accountmenu" style="float:right; margin-right:8px">  
+							<div model-id="@lead.id" model-priority="@lead.priority" model-lat="@lead.latitude" model-lng="@lead.longitude"
+						      class="dropdown" id="accountmenu" style="display:inline-block;margin-right:8px">  
                         		<a class="dropdown-toggle" data-toggle="dropdown" href="#"><b class="caret"></b></a>  
                         		<ul class="dropdown-menu"> 
                             		<li><a href="#renameLeadModal" data-toggle="modal"">Omdøb</a></li>  
                             		<li><a href="#deleteLeadModal" data-toggle="modal"">Slet</a></li>
                         		</ul>  
                     		</div>
+							@lead.name @if(lead.approved){<div class="icon-approved pull-right"></div>}
+						    
 						</li>
 						  
 						

@@ -60,6 +60,8 @@ object InternalLead extends Controller with Secured {
       case None => BadRequest("No such lead.")
       case Some (lead) => 
         val fairyId = lead.fairyTaleId
+        if (lead.imageFile.isDefined) fileSaver.deleteFromFairyTale(lead.imageFile.get)
+        if (lead.soundFile.isDefined) fileSaver.deleteFromFairyTale(lead.soundFile.get)
         Lead.delete(lead)
         Redirect(routes.InternalFairyTale.fairyTale(fairyId, -1, "story"))
     }

@@ -53,6 +53,12 @@
 	font-size: 14px;
 }
 
+.lead-list .dropdown {
+	display: inline-block;
+	padding-right: 8px;
+	padding-left: 8px;
+}
+
 /*Admin approve mode*/
 #admin-approve-mode-toggle {
 	width: 100%;

@@ -33,8 +33,7 @@
 					<li class="nav-header">Ledetråde</li>
 					@for((lead, idx) <- FairyTale.getLeads(fairyTale.id.get).zipWithIndex){
 						<li model-id="@lead.id" model-priority="@lead.priority" model-lat="@lead.latitude" model-lng="@lead.longitude">
-							<div model-id="@lead.id" model-priority="@lead.priority" model-lat="@lead.latitude" model-lng="@lead.longitude"
-						      class="dropdown" id="accountmenu" style="display:inline-block;margin-right:8px">  
+							<div class="dropdown" id="accountmenu">  
                         		<a class="dropdown-toggle" data-toggle="dropdown" href="#"><b class="caret"></b></a>  
                         		<ul class="dropdown-menu"> 
                             		<li><a href="#renameLeadModal" data-toggle="modal"">Omdøb</a></li>  
@@ -42,20 +41,17 @@
                         		</ul>  
                     		</div>
 							@lead.name @if(lead.approved){<div class="icon-approved pull-right"></div>}
-						    
 						</li>
-						  
-						
 					} 
 					<script type="text/javascript">
 						$(function(){
 							var leadId = @leadId;
 							//If no lead was requested to begin with then load the first one
 							if (leadId == -1) {
-								$('.lead-list li:nth-child(2)').click();
+								$('.lead-list > li:nth-child(2)').click();
 							} else {
 								//Select the requested lead
-								$('.lead-list li[model-id=' + leadId + ']').click();
+								$('.lead-list > li[model-id=' + leadId + ']').click();
 							}
 						});
 					</script>

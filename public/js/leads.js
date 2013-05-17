@@ -2,17 +2,28 @@ var currentAudio = null;
 
 $(function(){
 	//Attach listeners to all leads in the lead-list
-	$('.lead-list li:nth-child(n+2)').click( function(){
-		$('.lead-list li:nth-child(n+2)').removeClass('active');
+	$('.lead-list > li:nth-child(n+2)').click( function(e){
+		if (e.originalEvent && (e.originalEvent.srcElement.className == 'dropdown-toggle' || e.originalEvent.srcElement.className == 'caret' || e.originalEvent.srcElement.className == 'dropdown')) {
+			return true;
+		}
+		$('.lead-list > li:nth-child(n+2)').removeClass('active');
 		$(this).addClass('active');
 		loadLead($(this).attr('model-id'));
+		
+	});
+	
+	//Attach listeners to all dropdowns
+	$('.lead-list .dropdown').click(function(e){
+		$('.lead-list > li:nth-child(n+2)').removeClass('active');
+		$(this).closest('li').addClass('active');
+		loadLead($(this).closest('li').attr('model-id'));
 	});
 	
 	//Make leads sortable (JQuery-ui) and attach a stop listener
 	$('#sortable-leads').sortable({
     	stop: function(event, ui){
     		var id = ui.item.attr('model-id');
-    		$('#sortable-leads li').each(function(key, value){
+    		$('#sortable-leads > li').each(function(key, value){
     			if(id == $(value).attr('model-id')) {
     				//Change priority (zero indexed) to match position (non-zero indexed)
     				setLeadPriority(id, key - 1);
@@ -26,7 +37,7 @@ $(function(){
 		if ($($('.lead-image')[0]).attr('src') != "" && currentAudio != "") {
 			setLeadApproved($($('.lead-id')[0]).val());
 		} else {
-			alert("En ledetr��d kan ikke godkendes uden billede og/eller lyd.");
+			alert("En ledetråd kan ikke godkendes uden billede og/eller lyd.");
 		}
 		
 	})
@@ -39,12 +50,12 @@ function loadLead(id){
 			$('#lead-name').text("Ledetråd: " + lead.name);
 			$('.lead-id').val(lead.id);
 			$('.lead-image').attr('src', lead.imageFile);
-			$('.lead-story').text(lead.story);
+			$('.lead-story').val(lead.story);
 			$('.jp-jplayer').jPlayer("setMedia", {
                 mp3: lead.soundFile
             });
 			currentAudio = lead.soundFile;
-			$('#image-anchoring').text(lead.anchoring);
+			$('#image-anchoring').val(lead.anchoring);
 			if(lead.approved) {
 				$('#yes').val('Godkendt');
 				$('#yes').attr('disabled', true);
@@ -81,7 +92,7 @@ function setLeadApproved(id){
 		success: function(response) {
 			$('#sortable-leads li[model-id=' + id + ']').append('<div class="icon-approved pull-right" /></div>')
 			if (response.nextLeadPriority != -1) {
-				$('#sortable-leads li[model-priority=' + response.nextLeadPriority + ']').click();
+				$('#sortable-leads > li[model-priority=' + response.nextLeadPriority + ']').click();
 			} else {
 				$('#approve').fadeOut();
 				setTimeout(function(){

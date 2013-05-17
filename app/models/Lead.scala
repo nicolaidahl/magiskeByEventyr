@@ -191,7 +191,7 @@ object Lead {
     //Update leads with priority number higher than the deleted one
     for (sisterLead <- sisterLeads) {
       if(sisterLead.priority > leadPriority) {
-    	sisterLead.priority = sisterLead.priority -1
+    	sisterLead.priority = sisterLead.priority - 1
         Lead.update(sisterLead)
       }
     }

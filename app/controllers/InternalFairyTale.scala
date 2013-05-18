@@ -50,6 +50,13 @@ object InternalFairyTale extends Controller with Secured {
     FairyTale.update(fairyTale)
     Redirect(routes.Application.index)
   }
+  
+  def unpublish = IsAuthenticated(parse.multipartFormData) { _ => implicit request =>
+    val fairyTale = FairyTale.findById(request.body.asFormUrlEncoded.get("id").get(0).toInt).get
+    fairyTale.published = false
+    FairyTale.update(fairyTale)
+    Redirect(routes.InternalFairyTale.fairyTale(fairyTale.id.get, -1, ""))
+  }
 }
 
 

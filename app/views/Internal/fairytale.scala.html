@@ -80,8 +80,13 @@
 		</div>
 	</div>
 	@if(FairyTale.getLeads(fairyTale.id.get).length == 0){
-	<div class="span10 offset1" style="text-align:center">
-		<h1 style="color: #999999;font-style:italic;height=300px">Opret den første ledetråd</h1>
+	<div class="row-fluid">
+		<div class="span10 offset1">
+			<div class="hero-unit">
+				<h2>Der er endnu ingen ledetråde knyttet til eventyret!</h2>
+				<p>Tryk på knappen ovenfor og til højre for at oprette den første ledetråd.</p>
+			</div>
+		</div>
 	</div>
 	} else {
 		@if(userType == "admin"){
@@ -113,9 +118,14 @@
 					<div class="row-fluid">
 						<div class="span10 offset1">
 							<div class="hero-unit">
+							@helper.form(action = routes.InternalFairyTale.unpublish, 'enctype -> "multipart/form-data") {
+								<input type="hidden" name="id" value="@fairyTale.id.get">
 								<h2>Eventyret er offentliggjort!</h2>
 								<p>Der kan stadig laves rettelser i eventyret i editerings mode.</p>
 								<p>Rettelser til billeder eller lyd bliver straks udført i det offentliggjorte eventyr.</p>
+								<p>Tryk på knappen nedenfor for at tilbagetrække eventyret.</p>
+								<input type="submit" class="btn btn-danger pull-right" value="Træk tilbage" />
+							}
 							</div>
 						</div>
 					</div>

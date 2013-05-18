@@ -29,7 +29,7 @@ function clearMarkers() {
 
 function updateMarkers() {
 	clearMarkers();
-	var list = $('#sortable-leads li'); 
+	var list = $('#sortable-leads > li'); 
 	if (list.length == 2) { //Only one element
 		var marker = new google.maps.Marker({
 		  position: new google.maps.LatLng($($(list)[1]).attr('model-lat'), $($(list)[1]).attr('model-lng')),

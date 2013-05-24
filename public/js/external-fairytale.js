@@ -35,7 +35,7 @@ $(function(){
 				$(this).removeAttr('disabled');
 			}
 			if (currentLead == leads.length -1) { //Moving from last lead
-				$('#forward').text('Fortsæt');
+				$('#forward').text('Næste');
 			}
 			moveTo(currentLead - 1);
 		} 

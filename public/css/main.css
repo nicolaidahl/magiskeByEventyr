@@ -1,3 +1,34 @@
+/*General button styling*/
+.btn:hover{
+	background-position: 0px 0px;	
+}
+.btn-primary{
+	background-image: -moz-linear-gradient(top, #5105a3, #45048a);
+  	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5105a3), to(#45048a));
+  	background-image: -webkit-linear-gradient(top, #5105a3, #45048a);
+  	background-image: -o-linear-gradient(top, #5105a3, #45048a);
+  	background-image: linear-gradient(to bottom, #5105a3, #45048a);
+  	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5105a3', endColorstr='#45048a', GradientType=0);
+  	border-color: #45048a #45048a #45048a;
+}
+.btn-success{
+	background-image: -moz-linear-gradient(top, #7AB330, #618f26);
+  	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#7AB330), to(#618f26));
+  	background-image: -webkit-linear-gradient(top, #7AB330, #618f26);
+  	background-image: -o-linear-gradient(top, #7AB330, #618f26);
+  	background-image: linear-gradient(to bottom, #7AB330, #618f26);
+  	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7AB330', endColorstr='#618f26', GradientType=0);
+  	border-color: #618f26 #618f26 #618f26;
+}
+.btn-danger{
+	background-image: -moz-linear-gradient(top, #e55702, #cc4d02);
+  	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e55702), to(#cc4d02));
+  	background-image: -webkit-linear-gradient(top, #e55702, #cc4d02);
+  	background-image: -o-linear-gradient(top, #e55702, #cc4d02);
+  	background-image: linear-gradient(to bottom, #e55702, #cc4d02);
+  	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e55702', endColorstr='#cc4d02', GradientType=0);
+  	border-color: #cc4d02 #cc4d02 #cc4d02;
+}
 /*Anchor button styling*/
 
 #last a {

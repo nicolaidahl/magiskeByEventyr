@@ -99,6 +99,19 @@ trait Secured {
   }
   
   /**
+   * Action for admin users
+   */
+  def IsAdmin(f: => String => Request[AnyContent] => Result) = 
+    IsAuthenticated { username => implicit request =>
+  	  if(User.isUserAdmin(username))
+  	    f(username)(request)
+  	  else
+  	    onUnauthorized(request)
+    }
+  
+  
+  
+  /**
    * Check if the connected user is a member of this project.
    * TODO: May be relevant to see if "creators" may edit for a certain customer
    */

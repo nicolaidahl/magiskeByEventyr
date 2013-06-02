@@ -27,6 +27,8 @@ POST	/internal/leads/updateLeadWithImage				controllers.InternalLead.updateLeadW
 POST	/internal/leads/getNextUnapprovedLead			controllers.InternalLead.getNextUnapprovedLead(fairyTaleId: Int)
 POST	/internal/leads/approveLead						controllers.InternalLead.approveLead(id: Int)
 POST	/internal/leads/disapproveLead					controllers.InternalLead.disapproveLead
+GET     /internal/settings								controllers.InternalAdminSettings.settings
+POST	/internal/settings/createUser					controllers.InternalAdminSettings.createUser
 
 
 

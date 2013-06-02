@@ -96,7 +96,7 @@ object InternalLead extends Controller with Secured {
     }
   }
   
-  def setLeadPriority (id: Int, priority: Int) = Action { implicit request =>
+  def setLeadPriority (id: Int, priority: Int) = IsAuthenticated { _ => implicit request =>
     val updated = Lead.setPriority(id, priority)
     Ok(Json.toJson(FairyTale.getLeads(updated.fairyTaleId).map(l => Map(
         		"id" -> Json.toJson(l.id),
@@ -173,7 +173,7 @@ object InternalLead extends Controller with Secured {
     Redirect(routes.InternalFairyTale.fairyTale(lead.fairyTaleId, lead.id.get, "story"))
   }
   
-  def getNextUnapprovedLead (fairyTaleId: Int) = Action { implicit request =>
+  def getNextUnapprovedLead (fairyTaleId: Int) = IsAuthenticated { _ => implicit request =>
     //Find the priority of the lead which has the lowest priority among all un-approved leads
     val prio = FairyTale.getLeads(fairyTaleId).filter(l => !l.approved).foldLeft(Int.MaxValue)((p, e) => p min e.priority)
     //Return the priority if one was found (not Int.maxvalue) - otherwise -1
@@ -182,7 +182,7 @@ object InternalLead extends Controller with Secured {
     )))
   }
   
-  def approveLead (id: Int) = Action { implicit request =>
+  def approveLead (id: Int) = IsAuthenticated { _ => implicit request =>
     val lead = Lead.findById(id).get;
     lead.approved = true;
     Lead.update(lead)
@@ -194,7 +194,7 @@ object InternalLead extends Controller with Secured {
     )))
   }
   
-  def disapproveLead = Action(parse.multipartFormData) { implicit request =>
+  def disapproveLead = IsAuthenticated { _ => implicit request =>
     Ok("TODO: Implement")
   }
 

@@ -1,0 +1,46 @@
+@(userForm: Form[User], error: String)
+@import helper._
+@Layout.internal_main("Magiske Byeventyr! - Intern brug") {
+    @error
+	<div class="row-fluid">
+		<div class="span6 offset3">
+			<div class="hero-unit">
+				<h2>Administrator Settings</h2>
+				<p>
+					<a href="#myModal" role="button" class="btn-large btn-success pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret Bruger</a>
+				</p>
+			</div>	
+		</div>
+	</div> 
+	
+	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+	    <h3 id="myModalLabel">Opret Bruger</h3>
+	  </div>
+	  @helper.form(routes.InternalAdminSettings.createUser){
+		  <div class="modal-body">
+		    @helper.inputText(userForm("email"), '_label -> "E-mail")
+		    @helper.inputText(userForm("name"), '_label -> "Navn")
+		    @helper.inputText(userForm("password"), '_label -> "Kode")
+		    @select(field = userForm("userType"), options = Seq("creator"->"Forfatter", "admin"->"Administrator"), args = '_label -> "Type")
+		  </div>
+		  <div class="modal-footer">
+		    <button class="btn" data-dismiss="modal" aria-hidden="true">Luk</button>
+		    <input type="submit" class="btn btn-primary" value="Gem" />
+		  </div>					  
+	  }
+	</div> 
+} {
+	<div class="row-fluid">
+		<div class="navbar">
+		  <div class="navbar-inner">
+		    <a class="brand" href="@routes.Application.index"></a>
+		    <ul class="nav pull-right">				    	
+		      	<li><a href="@routes.InternalAdminSettings.settings">Indstillinger</a></li>
+				<li><a href="@routes.Internal.logout">Logout</a></li>
+		    </ul>
+		  </div>
+		</div>
+	</div>
+}

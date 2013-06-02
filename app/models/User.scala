@@ -37,6 +37,13 @@ object User {
     }
   }
   
+  def isUserAdmin(email: String): Boolean = {
+    val userOpt = findByEmail(email)
+  	  
+  	userOpt.isDefined && userOpt.get.userType.equals("admin")
+  	
+  }
+  
   /**
    * Retrieve all users.
    */
@@ -71,14 +78,15 @@ object User {
       SQL(
         """
           insert into mbe_user values (
-            {email}, {name}, {password}, {type}
+            {email}, {name}, {password}, {salt}, usertype({type})
           )
         """
       ).on(
         'email -> user.email,
         'name -> user.name,
         'password -> user.password,
-        'type -> user.userType
+        'salt -> "salt",
+        'type -> (if (user.userType.equals("admin")) "admin" else "creator")
       ).executeUpdate()
       
       user

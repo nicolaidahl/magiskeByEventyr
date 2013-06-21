@@ -2,12 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Public content
-GET     /                           			controllers.Application.index
-GET		/about									controllers.Application.about
-GET		/fairyTales/:id							controllers.Application.fairyTale(id: Int)
-POST	/fairyTales/getLeads					controllers.Application.getLeads(fairyTaleId: Int)
-
 # Internal content
 GET		/internal										controllers.InternalCustomer.customers
 POST	/internal										controllers.InternalCustomer.saveCustomer
@@ -30,7 +24,12 @@ POST	/internal/leads/disapproveLead					controllers.InternalLead.disapproveLead
 GET     /internal/settings								controllers.InternalAdminSettings.settings
 POST	/internal/settings/createUser					controllers.InternalAdminSettings.createUser
 
-
+# Public content
+GET     /                           			controllers.Application.index
+GET		/about									controllers.Application.about
+GET		/:customerName							controllers.Application.fairyTales(customerName: String)
+GET		/fairyTales/:id							controllers.Application.fairyTale(id: Int)
+POST	/fairyTales/getLeads					controllers.Application.getLeads(fairyTaleId: Int)
 
 # Authentication
 GET     /internal/login             controllers.Internal.login

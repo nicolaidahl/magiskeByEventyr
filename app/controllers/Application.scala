@@ -21,6 +21,25 @@ object Application extends Controller {
     Ok(views.html.Application.index(fairyTaleMap))
   }
   
+  def fairyTales (customerName: String) = Action {
+    val customer = Customer.findByName(customerName);
+    if (customer.isDefined) {
+	  val fairyTales = FairyTale.findAllPublishedByCustomer(customer.get.id.get);
+      if (fairyTales.length == 1) {
+        Ok(views.html.Application.fairytale(fairyTales(0).id.get))
+      } else if (fairyTales.isEmpty) {
+    	Ok(views.html.Application.index(new HashMap[Option[String], Option[Seq[FairyTale]]]))
+      } else {
+        val fairyTaleMap = HashMap[Option[String], Option[Seq[FairyTale]]] (
+        		Option(customer.get.name) -> Option(fairyTales) 
+        )
+        Ok(views.html.Application.index(fairyTaleMap))
+      }
+    } else {
+      Ok(views.html.Application.index(new HashMap[Option[String], Option[Seq[FairyTale]]]))
+    }
+  }
+  
   def about = Action {
     Ok("About")
   }

@@ -149,6 +149,21 @@ object FairyTale {
     }
   }
   
+  def delete(fairyTale: FairyTale) = {
+    val leads = Lead.findAllByFairyTale(fairyTale.id.get)
+    leads.foreach(lead => Lead.delete(lead))
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          delete from fairy_tale where id={id}
+        """
+      ).on(
+        'id -> fairyTale.id
+      ).executeUpdate()
+      
+    }
+  }
+  
   def getLeads(fairyTaleId: Int) : Seq[Lead] = {
     DB.withConnection { implicit connection =>
       SQL(

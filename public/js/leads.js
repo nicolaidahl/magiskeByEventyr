@@ -3,7 +3,7 @@ var currentAudio = null;
 $(function(){
 	//Attach listeners to all leads in the lead-list
 	$('.lead-list > li:nth-child(n+2)').click( function(e){
-		if (e.originalEvent && (e.originalEvent.srcElement.className == 'dropdown-toggle' || e.originalEvent.srcElement.className == 'caret' || e.originalEvent.srcElement.className == 'dropdown')) {
+		if (e.originalEvent && (e.originalEvent.srcElement.className == 'dropdown-toggle' || e.originalEvent.srcElement.className == 'caret' || e.originalEvent.srcElement.className == 'dropdown' || e.originalEvent.srcElement.localName == 'a')) {
 			return true;
 		}
 		$('.lead-list > li:nth-child(n+2)').removeClass('active');
@@ -13,11 +13,11 @@ $(function(){
 	});
 	
 	//Attach listeners to all dropdowns
-	$('.lead-list .dropdown').click(function(e){
+	/*$('.lead-list .dropdown').click(function(e){
 		$('.lead-list > li:nth-child(n+2)').removeClass('active');
 		$(this).closest('li').addClass('active');
 		loadLead($(this).closest('li').attr('model-id'));
-	});
+	});*/
 	
 	//Make leads sortable (JQuery-ui) and attach a stop listener
 	$('#sortable-leads').sortable({

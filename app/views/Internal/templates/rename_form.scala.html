@@ -1,5 +1,4 @@
-@()
-
+@(id: Int)
 @helper.form(action = routes.InternalLead.renameLead, 'enctype -> "multipart/form-data") {
 	<div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -9,8 +8,8 @@
 		<div class="row-fluid">
 			<div class="hero-unit">
 				<h4>Nyt navn</h4>
-				<input type="text" id="leadName" name="lead-name" value="" />
-				<input type="hidden" id="leadId" class="lead-id" name="lead-id" value="" />
+				<input type="text" name="rename-lead-name" value="" />
+				<input type="hidden" name="rename-lead-id" value="@id" />
 			</div>
 		</div>
 	</div>

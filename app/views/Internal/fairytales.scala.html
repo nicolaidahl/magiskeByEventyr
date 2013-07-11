@@ -1,13 +1,10 @@
 @(customerId: Int, fairyTales: Seq[FairyTale], fairyTaleForm: Form[FairyTale])
 @Layout.internal_main("Magiske Byeventyr! - Intern brug") {
-	@if(fairyTales.length > 0) {
-		
-	}
-	
+	<div class="row-fluid">
 		@if(fairyTales.length > 0) {
 			<div class="row-fluid">
 				<div class="span10 offset1">
-					<a href="#myModal" role="button" class="btn-large btn-success pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret nyt eventyr</a>
+					<a href="#createFairyTaleModal" role="button" class="btn-large btn-success pull-right" data-toggle="modal" style="margin-bottom: 20px">Opret nyt eventyr</a>
 				</div>
 			</div>
 			@for((fairyTale, idx) <- fairyTales.zipWithIndex){
@@ -17,12 +14,31 @@
 						<ul class="thumbnails">
 				}	
 							<li class="span3">
-								<a href='@routes.InternalFairyTale.fairyTale(fairyTale.id.getOrElse(-1), -1, "")'>
-								<div class="thumbnail">
-									<h3 class="text-center">@fairyTale.name</h3>
-									<img src="@fairyTale.imagefile" alt="Eventyr billede" />
+								<div class="row-fluid">
+									<div href="#deleteFairyTaleModal@idx" role="button"  data-toggle="modal" class="icon-delete pull-right"></div>
+									<div id="deleteFairyTaleModal@idx" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteFairyTaleModalLabel@idx" aria-hidden="true">
+									  <div class="modal-header">
+									    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+									    <h3 id="deleteFairyTaleModalLabel@idx">Slet eventyr</h3>
+									  </div>
+									  <div class="modal-body">
+									  	<p>Er du sikker på at du vil slette eventyret?</p>
+									  </div>
+								  	  <div class="modal-footer">
+									    @helper.form(routes.InternalFairyTale.deleteFairyTale(fairyTale.id.get, customerId)){
+										    <button class="btn" data-dismiss="modal" aria-hidden="true">Fortryd</button>
+										    <input type="submit" class="btn btn-danger" value="Slet" />
+									    }
+									  </div>
+									</div>
 								</div>
+								<a href='@routes.InternalFairyTale.fairyTale(fairyTale.id.getOrElse(-1), -1, "")'>
+									<div class="thumbnail">
+										<h3 class="text-center">@fairyTale.name</h3>
+										<img src="@fairyTale.imagefile" alt="Eventyr billede" />
+									</div>
 								</a>
+								
 							</li>
 				@if((idx + 1) % 4 == 0) {
 						</ul>	
@@ -37,16 +53,16 @@
 						<h2>Ingen eventyr!</h2>
 						<p>Tryk på knappen nedenfor for at oprette et nyt eventyr.</p>
 						<p>
-							<a href="#myModal" role="button" class="btn-large btn-success pull-right" data-toggle="modal">Nyt eventyr</a>
+							<a href="#createFairyTaleModal" role="button" class="btn-large btn-success pull-right" data-toggle="modal">Nyt eventyr</a>
 						</p>
 					</div>	
 				</div>
 			</div>
 		}
-		<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div id="createFairyTaleModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="createFairyTaleModalLabel" aria-hidden="true">
 		  <div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-		    <h3 id="myModalLabel">Opret eventyr</h3>
+		    <h3 id="createFairyTaleModalLabel">Opret eventyr</h3>
 		  </div>
 		  @helper.form(routes.InternalFairyTale.saveFairyTale(customerId)){
 			  <div class="modal-body">

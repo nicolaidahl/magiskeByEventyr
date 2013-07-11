@@ -33,6 +33,12 @@ object InternalFairyTale extends Controller with Secured {
 	  }
   	)
   }
+  
+  def deleteFairyTale (id: Int, customerId: Int) = IsAuthenticated { _ => implicit request =>
+  	val fairyTale = FairyTale.findById(id).get;
+    FairyTale.delete(fairyTale);
+    Redirect(routes.InternalFairyTale.fairyTales(fairyTale.customerId))
+  }
 	
   //TODO: Return error if None!
   def fairyTale (id: Int, leadId: Int, tab: String) = IsAuthenticated { username => _ =>

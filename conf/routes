@@ -7,6 +7,7 @@ GET		/internal										controllers.InternalCustomer.customers
 POST	/internal										controllers.InternalCustomer.saveCustomer
 GET		/internal/:customerId/fairytales				controllers.InternalFairyTale.fairyTales(customerId: Int)
 POST	/internal/:customerId/fairytales				controllers.InternalFairyTale.saveFairyTale(customerId: Int)
+POST	/internal/:customerId/fairytales/:id/delete		controllers.InternalFairyTale.deleteFairyTale(id: Int, customerId: Int)
 GET		/internal/fairytales/:id						controllers.InternalFairyTale.fairyTale(id: Int, leadId: Int, tab: String)
 POST	/internal/fairytales/publish					controllers.InternalFairyTale.publish
 POST	/internal/fairytales/unpublish					controllers.InternalFairyTale.unpublish

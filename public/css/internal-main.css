@@ -121,6 +121,12 @@
 	background-position: -288px 0px;
 }
 
+.icon-delete {
+	background-position: -312px 0px;
+	cursor: pointer;
+	margin-bottom: -20px;
+}
+
 li.active .icon-approved {
 	background-image: url("../img/glyphicons-halflings-white.png");
 	background-position: -288px 0px;

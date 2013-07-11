@@ -174,6 +174,9 @@ object Lead {
    */
   def delete(lead: Lead) = {
     val leadPriority = lead.priority
+    val fileSaver = if (S3Plugin.isEnabled) { AmazonS3FileHandler } else { LocalFileHandler }
+    if (lead.imageFile.isDefined) fileSaver.deleteFromFairyTale(lead.imageFile.get)
+    if (lead.soundFile.isDefined) fileSaver.deleteFromFairyTale(lead.soundFile.get)
     
     DB.withConnection { implicit connection =>
       SQL(

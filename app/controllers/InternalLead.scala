@@ -53,15 +53,13 @@ object InternalLead extends Controller with Secured {
   
   
   def deleteLead = IsAuthenticated(BodyParsers.parse.multipartFormData) { _ => implicit request =>
-    val leadIDForDeletion = request.body.asFormUrlEncoded.get("lead-id").get(0).toInt
+    val leadIDForDeletion = request.body.asFormUrlEncoded.get("delete-lead-id").get(0).toInt
     val leadOpt = Lead.findById(leadIDForDeletion)
     
     leadOpt match {
       case None => BadRequest("No such lead.")
       case Some (lead) => 
         val fairyId = lead.fairyTaleId
-        if (lead.imageFile.isDefined) fileSaver.deleteFromFairyTale(lead.imageFile.get)
-        if (lead.soundFile.isDefined) fileSaver.deleteFromFairyTale(lead.soundFile.get)
         Lead.delete(lead)
         Redirect(routes.InternalFairyTale.fairyTale(fairyId, -1, "story"))
     }
@@ -69,10 +67,10 @@ object InternalLead extends Controller with Secured {
   }
   
   def renameLead = IsAuthenticated(BodyParsers.parse.multipartFormData) { _ => implicit request =>
-    val leadIDForRenaming = request.body.asFormUrlEncoded.get("lead-id").get(0).toInt
+    val leadIDForRenaming = request.body.asFormUrlEncoded.get("rename-lead-id").get(0).toInt
     val leadOpt = Lead.findById(leadIDForRenaming)
     
-    val newLeadNameOpt = request.body.asFormUrlEncoded.get("lead-name")
+    val newLeadNameOpt = request.body.asFormUrlEncoded.get("rename-lead-name")
     
     val retVal = 
       for {lead <- leadOpt

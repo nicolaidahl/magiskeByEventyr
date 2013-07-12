@@ -1,4 +1,5 @@
 var currentAudio = null;
+var clickedLead = null;
 var originalAnchoring = null;
 var originalStory = null;
 
@@ -8,18 +9,26 @@ $(function(){
 		if (e.originalEvent && (e.originalEvent.srcElement.className == 'dropdown-toggle' || e.originalEvent.srcElement.className == 'caret' || e.originalEvent.srcElement.className == 'dropdown' || e.originalEvent.srcElement.localName == 'a')) {
 			return true;
 		}
-		$('.lead-list > li:nth-child(n+2)').removeClass('active');
-		$(this).addClass('active');
-		loadLead($(this).attr('model-id'));
-		
+		clickedLead = this;
+		if (originalAnchoring != null && originalStory != null) {
+			if($('.lead-story').val() != originalStory){
+				$('#confirmNavigationText').text('Der er ændringer i ledetrådens historie, som ikke er blevet gemt. Er du sikker på du vil fortsætte til den anden ledetråd?');
+				$('#confirmNavigationModal').modal('show');
+			} else if ($('#image-anchoring').val() != originalAnchoring) {
+				$('#confirmNavigationText').text('Der er ændringer i ledetrådens fysiske forankring, som ikke er blevet gemt. Er du sikker på du vil fortsætte til den anden ledetråd?');
+				$('#confirmNavigationModal').modal('show');
+			} else {
+				navigateToLead();
+			}
+		} else {
+			navigateToLead();
+		}
 	});
 	
-	//Attach listeners to all dropdowns
-	/*$('.lead-list .dropdown').click(function(e){
-		$('.lead-list > li:nth-child(n+2)').removeClass('active');
-		$(this).closest('li').addClass('active');
-		loadLead($(this).closest('li').attr('model-id'));
-	});*/
+	$('#navigationConfirmed').click(function(){
+		$('#confirmNavigationModal').modal('hide');
+		navigateToLead();
+	});
 	
 	//Make leads sortable (JQuery-ui) and attach a stop listener
 	$('#sortable-leads').sortable({
@@ -43,7 +52,13 @@ $(function(){
 		}
 		
 	})
-})
+});
+
+function navigateToLead(){
+	$('.lead-list > li:nth-child(n+2)').removeClass('active');
+	$(clickedLead).addClass('active');
+	loadLead($(clickedLead).attr('model-id'));
+}
 
 function loadLead(id){
 	jsRoutes.controllers.InternalLead.getLead(id).ajax({

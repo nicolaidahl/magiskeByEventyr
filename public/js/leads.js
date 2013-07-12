@@ -1,4 +1,6 @@
 var currentAudio = null;
+var originalAnchoring = null;
+var originalStory = null;
 
 $(function(){
 	//Attach listeners to all leads in the lead-list
@@ -51,11 +53,13 @@ function loadLead(id){
 			$('.lead-id').val(lead.id);
 			$('.lead-image').attr('src', lead.imageFile);
 			$('.lead-story').val(lead.story);
+			originalStory = lead.story;
 			$('.jp-jplayer').jPlayer("setMedia", {
                 mp3: lead.soundFile
             });
 			currentAudio = lead.soundFile;
 			$('#image-anchoring').val(lead.anchoring);
+			originalAnchoring = lead.anchoring;
 			if(lead.approved) {
 				$('#yes').val('Godkendt');
 				$('#yes').attr('disabled', true);

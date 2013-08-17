@@ -11,10 +11,15 @@ $(function(){
 		}
 		clickedLead = this;
 		if (originalAnchoring != null && originalStory != null) {
-			if($('.lead-story').val() != originalStory){
+			//Normalize encoding
+			normalizedOriginalStory = unorm.nfc(originalStory);
+			normalizedOriginalAnchoring = unorm.nfc(originalAnchoring);
+			normalizedStory = unorm.nfc($('.lead-story').val());
+			normalizedAnchoring = unorm.nfc($('#image-anchoring').val());
+			if(normalizedStory !== normalizedOriginalStory){
 				$('#confirmNavigationText').text('Der er ændringer i ledetrådens historie, som ikke er blevet gemt. Er du sikker på du vil fortsætte til den anden ledetråd?');
 				$('#confirmNavigationModal').modal('show');
-			} else if ($('#image-anchoring').val() != originalAnchoring) {
+			} else if (normalizedAnchoring !== normalizedOriginalAnchoring) {
 				$('#confirmNavigationText').text('Der er ændringer i ledetrådens fysiske forankring, som ikke er blevet gemt. Er du sikker på du vil fortsætte til den anden ledetråd?');
 				$('#confirmNavigationModal').modal('show');
 			} else {

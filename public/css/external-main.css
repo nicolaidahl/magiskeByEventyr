@@ -3,3 +3,12 @@
 #to-index {
 	width: 100px;
 }
+
+.icon-help{
+	background-position: -96px -96px;
+	cursor: pointer;
+}
+
+#help-map {
+	height: 200px;
+}

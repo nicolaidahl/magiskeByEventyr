@@ -2,8 +2,31 @@
 
 @Layout.external_main("Magiske Byeventyr!") {
 	<script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
-    <div class="row-fluid">
+	
+    <div id="leads" class="row-fluid">
     	<div class="span4 offset4">
+    		<div class="row-fluid">
+    			<div class="icon-help pull-right"></div>
+    		</div>
+    		<div id="help" class="row-fluid" style="display:none">
+    			<div class="well">
+    				<div class="row-fluid">
+	    				<div class="span8">
+	    					<p id="help-text"></p>
+	    				</div>
+	    				<div class="span4">
+	    					<div class="checkbox pull-right">
+						      <label>
+						        <input type="checkbox" id="help-close" checked> Luk automatisk
+						      </label>
+						    </div>
+	    				</div>
+    				</div>
+    				<div class="row-fluid">
+    					<div id="help-map"></div>
+    				</div>
+    			</div>
+    		</div>
     		<div class="row-fluid">
     			<img class="lead-image" alt="Eventyr billede" src="">
     		</div>
@@ -19,6 +42,7 @@
     <script type="text/javascript">
     	var fairyTaleId = @fairyTaleId;
     </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUe30ZlsSvwhM2fLBXmog6yns29-_XVbs&sensor=false" type="text/javascript"></script>
     <script type="text/javascript" src="@routes.Assets.at("js/external-fairytale.js")"></script>
 } {
 	<div class="row-fluid">

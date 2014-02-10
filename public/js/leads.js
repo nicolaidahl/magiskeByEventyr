@@ -113,7 +113,7 @@ function setLeadApproved(id){
 			if (response.nextLeadPriority != -1) {
 				$('#sortable-leads > li[model-priority=' + response.nextLeadPriority + ']').click();
 			} else {
-				$('#approve').fadeOut();
+				$('#approve-lead').fadeOut(400);
 				setTimeout(function(){
 					$('#all-approved').fadeIn();
 				}, 400)

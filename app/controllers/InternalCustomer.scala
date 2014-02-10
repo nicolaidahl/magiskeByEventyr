@@ -21,17 +21,20 @@ object InternalCustomer extends Controller with Secured {
   def customers = IsAuthenticated { 
 	  username => _ =>
 	    User.findByEmail(username).map { user =>
-	    	Ok(views.html.Internal.customers(Customer.findAll, customerForm))
+	    	Ok(views.html.Internal.customers(Customer.findAll, customerForm, user.userType))
 	    }.getOrElse(Forbidden)
   }
 	
-  def saveCustomer = IsAuthenticated { _ => implicit request =>
-  	customerForm.bindFromRequest.fold(
-		errors => BadRequest(views.html.Internal.customers(Customer.findAll, errors)),
-  			customer => {
-  			  Customer.create(customer)
-  			  Redirect(routes.InternalCustomer.customers)
-  			}
-  	)
+  def saveCustomer = IsAuthenticated { 
+	  username => implicit request =>
+	    User.findByEmail(username).map { user =>
+	    		customerForm.bindFromRequest.fold(
+					errors => BadRequest(views.html.Internal.customers(Customer.findAll, errors, user.userType)),
+			  			customer => {
+			  			  Customer.create(customer)
+			  			  Redirect(routes.InternalCustomer.customers)
+			  			}
+			  	)
+	    }.getOrElse(Forbidden) 
   }
 }

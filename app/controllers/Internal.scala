@@ -61,7 +61,9 @@ object Internal extends Controller with Secured {
         controllers.routes.javascript.InternalLead.getLead,
         controllers.routes.javascript.InternalLead.setLeadPriority,
         controllers.routes.javascript.InternalLead.getNextUnapprovedLead,
-        controllers.routes.javascript.InternalLead.approveLead
+        controllers.routes.javascript.InternalLead.approveLead,
+        controllers.routes.javascript.InternalFairyTale.updateWithCredits,
+        controllers.routes.javascript.InternalFairyTale.updateWithInfo
       )
     ).as(JAVASCRIPT)
   }

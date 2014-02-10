@@ -5,7 +5,7 @@ import play.api.mvc._
 import models.Customer
 import models.FairyTale
 import scala.collection.immutable.HashMap
-import play.api.libs.json.Json
+import play.api.libs.json._
 import models.Lead
 
 object Application extends Controller {
@@ -51,7 +51,8 @@ object Application extends Controller {
   def javascriptRoutes = Action { implicit request =>
     Ok(
       Routes.javascriptRouter("jsRoutes")(
-        controllers.routes.javascript.Application.getLeads
+        controllers.routes.javascript.Application.getLeads,
+        controllers.routes.javascript.Application.getCredits
       )
     ).as(JAVASCRIPT)
   }
@@ -62,5 +63,10 @@ object Application extends Controller {
     	)
       )
     )
+  }
+  
+  def getCredits(fairyTaleId: Int) = Action { implicit request =>
+    val f = FairyTale.findById(fairyTaleId).get;
+    Ok(JsObject(List("credits" -> (if (f.credits.isDefined) JsString(f.credits.get) else JsString("")))))
   }
 }

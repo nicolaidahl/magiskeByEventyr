@@ -1,5 +1,6 @@
 var leads = null;
 var currentLead = null;
+var credits = null;
 
 $(function(){
 	//Init
@@ -19,9 +20,17 @@ $(function(){
 			alert("An error occured: " + data);
 		}
 	});
+	jsRoutes.controllers.Application.getCredits(fairyTaleId).ajax({
+		success: function(response) {
+			credits = response.credits;
+		},
+		error: function(data) {
+			alert("An error occured: " + data);
+		}
+	});
 	//Register button listeners
 	$('#back').click(function(){
-		if(currentLead != 0) {
+		if (currentLead != 0) {
 			$(this).attr('disabled','disabled');
 			if (currentLead == 1) { //Moving to first lead
 				var width = $(this).closest('.row-fluid').width();
@@ -49,8 +58,35 @@ $(function(){
 		} 
 	});
 	$('#forward').click(function(){
-		if ($(this).text() == 'Til forsiden') {
-			window.location.replace('http://' + window.location.host);
+		if ($(this).text() == 'Slut'){
+			$('#leads').fadeOut(200);
+			setTimeout(function(){
+				$('#credits').fadeIn(200);
+				setTimeout(function() {
+					//Register new listeners
+					$('#credits-text').text(credits);
+					$('#credits-forward').click(function(){
+						window.location.replace('http://' + window.location.host);
+					});
+					$('#credits-back').click(function(){
+						$('#credits').fadeOut(200);
+						setTimeout(function(){
+							$('#leads').fadeIn(200);
+							setTimeout(function(){
+								moveTo(0);
+								$('#forward').text('Næste');
+								var width = $('#back').closest('.row-fluid').width();
+								$('#back').fadeOut(400);
+								setTimeout(function(){
+									$('#forward').css({marginLeft : width / 100 * 49});
+									$('#forward').animate({width: width, marginLeft: 0},400);
+									$('#back').removeAttr('disabled');
+								}, 450);
+							}, 200);
+						}, 200);
+					});
+				}, 200)
+			}, 200);
 		} else if(currentLead != leads.length - 1) {
 			$(this).attr('disabled','disabled');
 			if (currentLead == 0) { //Moving from first lead
@@ -65,7 +101,7 @@ $(function(){
 				$(this).removeAttr('disabled');
 			}
 			if (currentLead + 1 == leads.length - 1) { //Moving to last lead
-				$(this).text('Til forsiden');
+				$(this).text('Slut');
 			}
 			var help = $('#help');
 			if(help.is(':visible') && help.find('#help-close').is(':checked')) {

@@ -11,6 +11,8 @@ POST	/internal/:customerId/fairytales/:id/delete		controllers.InternalFairyTale.
 GET		/internal/fairytales/:id						controllers.InternalFairyTale.fairyTale(id: Int, leadId: Int, tab: String)
 POST	/internal/fairytales/publish					controllers.InternalFairyTale.publish
 POST	/internal/fairytales/unpublish					controllers.InternalFairyTale.unpublish
+POST	/internal/fairytales/updateWithCredits			controllers.InternalFairyTale.updateWithCredits(id: Int, credits: String)
+POST	/internal/fairytales/updateWithInfo				controllers.InternalFairyTale.updateWithInfo(id: Int, name: String, dueDate: String, briefing: String)
 POST	/internal/leads/newLead							controllers.InternalLead.newLead
 POST    /internal/leads/deleteLead						controllers.InternalLead.deleteLead
 POST    /internal/leads/renameLead						controllers.InternalLead.renameLead
@@ -31,6 +33,7 @@ GET		/about									controllers.Application.about
 GET		/:customerName							controllers.Application.fairyTales(customerName: String)
 GET		/fairyTales/:id							controllers.Application.fairyTale(id: Int)
 POST	/fairyTales/getLeads					controllers.Application.getLeads(fairyTaleId: Int)
+POST	/fairyTales/getCredits					controllers.Application.getCredits(fairyTaleId: Int)
 
 # Authentication
 GET     /internal/login             controllers.Internal.login

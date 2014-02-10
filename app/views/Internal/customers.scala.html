@@ -1,4 +1,4 @@
-@(customers: Seq[Customer], customerForm: Form[Customer])
+@(customers: Seq[Customer], customerForm: Form[Customer], userType: String)
 @Layout.internal_main("Magiske Byeventyr! - Intern brug") {
 	@if(customers.length > 0) {
 		<div class="row-fluid">
@@ -59,8 +59,10 @@
 		<div class="navbar">
 		  <div class="navbar-inner">
 		    <a class="brand" href="@routes.Application.index"></a>
-		    <ul class="nav pull-right">				    	
+		    <ul class="nav pull-right">		
+		    	@if(userType == "admin"){		    	
 		      	<li><a href="@routes.InternalAdminSettings.settings">Indstillinger</a></li>
+		      	}
 				<li><a href="@routes.Internal.logout">Logout</a></li>
 		    </ul>
 		  </div>

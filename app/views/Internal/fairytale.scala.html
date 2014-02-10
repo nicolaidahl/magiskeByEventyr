@@ -102,45 +102,95 @@
 		@if(userType == "admin"){
 			<div class="row-fluid">
 				<div class="span10 offset1">
-					<button type="button" class="btn-small btn-success" id="admin-approve-mode-toggle">Skift til godkendelses mode</button>
+					<button type="button" class="btn-small btn-success" id="admin-approve-mode-toggle">Skift til admin mode</button>
 				</div>
 			</div>
-			@if(!fairyTale.published){
-			<div id="approve" style="display:none;">
-				@views.html.Internal.templates.lead_approve()
-			</div>
-			<div id="all-approved" style="display:none;">
+			<div id="fairytale-administration" style="display:none">
 				<div class="row-fluid">
 					<div class="span10 offset1">
-						<div class="hero-unit">
-							@helper.form(action = routes.InternalFairyTale.publish, 'enctype -> "multipart/form-data") {
-								<input type="hidden" name="id" value="@fairyTale.id.get">
-								<h2>Alle ledetråde godkendt!</h2>
-								<p>Tryk på knappen nedenfor for at offentliggøre eventyret.</p>
-								<input type="submit" class="btn btn-success pull-right" value="Offentliggør" />
-							}
-						</div>
+						<ul class="nav nav-tabs" id="administrationTab">
+					  		<li class="active"><a id="tabImage" data-toggle="tab" href="#info">Info</a></li>
+					  		<li><a id="tabStory" data-toggle="tab" href="#credits">Kreditering</a></li>
+					  		<li><a id="tabAudio" data-toggle="tab" href="#approve">Godkendelse</a></li>
+						</ul>
 					</div>
 				</div>
-			</div>
-			} else {
-				<div id="all-approved" style="display:none;">
-					<div class="row-fluid">
-						<div class="span10 offset1">
-							<div class="hero-unit">
-							@helper.form(action = routes.InternalFairyTale.unpublish, 'enctype -> "multipart/form-data") {
-								<input type="hidden" name="id" value="@fairyTale.id.get">
-								<h2>Eventyret er offentliggjort!</h2>
-								<p>Der kan stadig laves rettelser i eventyret i editerings mode.</p>
-								<p>Rettelser til billeder eller lyd bliver straks udført i det offentliggjorte eventyr.</p>
-								<p>Tryk på knappen nedenfor for at tilbagetrække eventyret.</p>
-								<input type="submit" class="btn btn-danger pull-right" value="Træk tilbage" />
-							}
+				<div class="tab-content">
+				  <div class="tab-pane active" id="info">
+				  	<div class="span10 offset1">
+				  		<div class="hero-unit">
+			  				<div class="row-fluid">
+				  				<h4>Navn</h4>
+				  				<input type="text" name="admin-name" value="@fairyTale.name" />
+				  				<h4>Deadline</h4>
+				  				<input type="text" name="admin-due-date" value='' />
+				  				<script>
+								  $(function() {
+								    $('input[name="admin-due-date"]').datepicker({ dateFormat: "yy-mm-dd" });
+								    $('input[name="admin-due-date"]').datepicker('setDate', new Date(@fairyTale.dueDate.getMillis()));
+								    $('#ui-datepicker-div').wrap('<div class="jquery-ui-scope" />');
+								  });
+							  	</script>		
+				  				<h4>Briefing</h4>
+				  				<textarea name="admin-briefing" rows="6" cols="1500" class="fullWidthTextArea">@fairyTale.briefing</textarea>
+				  			</div>
+				  			<div class="row-fluid">
+				  				<button type="button" class="btn btn-primary pull-right" id="admin-update-info">Gem</button>
+				  			</div>
+			  			</div>
+				  	</div>
+				  </div>
+				  <div class="tab-pane" id="credits">
+				  	<div class="span10 offset1">
+				  		<div class="hero-unit">
+			  				<div class="row-fluid">
+				  				<p align="center">Kreditering</p>
+				  				<textarea name="admin-credits" rows="6" cols="1500" class="fullWidthTextArea">@if(fairyTale.credits.isDefined){@fairyTale.credits.get}</textarea>
+				  			</div>
+				  			<div class="row-fluid">
+				  				<button type="button" class="btn btn-primary pull-right" id="admin-update-with-credits">Gem</button>
+				  			</div>
+			  			</div>
+			  		</div>
+				  </div>
+				  <div class="tab-pane" id="approve">
+				  	<div class="span10 offset1">
+				  		@if(!fairyTale.published){
+							<div id="approve-lead" style="display:none;">
+								@views.html.Internal.templates.lead_approve()
 							</div>
-						</div>
-					</div>
-				</div>
-			}
+							<div id="all-approved" style="display:none;">
+								<div class="row-fluid">
+									<div class="hero-unit">
+										@helper.form(action = routes.InternalFairyTale.publish, 'enctype -> "multipart/form-data") {
+											<input type="hidden" name="id" value="@fairyTale.id.get">
+											<h2>Alle ledetråde godkendt!</h2>
+											<p>Tryk på knappen nedenfor for at offentliggøre eventyret.</p>
+											<input type="submit" class="btn btn-success pull-right" value="Offentliggør" />
+										}
+									</div>
+								</div>
+							</div>
+						} else {
+							<div id="all-approved" style="display:none;">
+								<div class="row-fluid">
+									<div class="hero-unit">
+									@helper.form(action = routes.InternalFairyTale.unpublish, 'enctype -> "multipart/form-data") {
+										<input type="hidden" name="id" value="@fairyTale.id.get">
+										<h2>Eventyret er offentliggjort!</h2>
+										<p>Der kan stadig laves rettelser i eventyret i editerings mode.</p>
+										<p>Rettelser til billeder eller lyd bliver straks udført i det offentliggjorte eventyr.</p>
+										<p>Tryk på knappen nedenfor for at tilbagetrække eventyret.</p>
+										<input type="submit" class="btn btn-danger pull-right" value="Træk tilbage" />
+									}
+									</div>
+								</div>
+							</div>
+						}
+				  	</div>
+				  </div>
+			  </div>
+			</div>
 		}
 		<div id="create">
 			<div class="row-fluid">

@@ -44,7 +44,7 @@ object InternalFairyTale extends Controller with Secured {
   def fairyTale (id: Int, leadId: Int, tab: String) = IsAuthenticated { username => _ =>
     User.findByEmail(username).map { user =>
       FairyTale.findById(id) match {
-        case None => BadRequest(views.html.Internal.customers(Customer.findAll, InternalCustomer.customerForm))
+        case None => BadRequest(views.html.Internal.customers(Customer.findAll, InternalCustomer.customerForm, user.userType))
         case Some (fairyTale) => Ok(views.html.Internal.fairytale(fairyTale, Lead.form, user.userType, leadId, tab))
       }    	
     }.getOrElse(Forbidden)
@@ -62,6 +62,22 @@ object InternalFairyTale extends Controller with Secured {
     fairyTale.published = false
     FairyTale.update(fairyTale)
     Redirect(routes.InternalFairyTale.fairyTale(fairyTale.id.get, -1, ""))
+  }
+  
+  def updateWithCredits (id: Int, credits: String) = IsAuthenticated { _ => implicit request =>
+    val fairyTale = FairyTale.findById(id).get;
+    fairyTale.credits = Some(credits);
+    FairyTale.update(fairyTale);
+    Ok("");
+  }
+  
+  def updateWithInfo (id: Int, name: String, dueDate: String, briefing: String) = IsAuthenticated { _ => implicit request =>
+    val fairyTale = FairyTale.findById(id).get;
+    fairyTale.name = name;
+    fairyTale.dueDate = DateTime.parse(dueDate);
+    fairyTale.briefing = briefing;
+    FairyTale.update(fairyTale);
+    Ok("");
   }
 }
 

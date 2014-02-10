@@ -59,10 +59,18 @@
 	padding-left: 8px;
 }
 
-/*Admin approve mode*/
+/*Admin mode*/
 #admin-approve-mode-toggle {
 	width: 100%;
 	margin-bottom: 10px;
+}
+
+.fullWidthTextArea {
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	resize: none;
 }
 
 /* Lead image */
